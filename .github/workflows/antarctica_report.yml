@@ -1,0 +1,23 @@
+name: Antarctica Report
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests python-dotenv
+      - name: Send report
+        env:
+          ANTARCTICA_TELEGRAM_TOKEN: ${{ secrets.ANTARCTICA_TELEGRAM_TOKEN }}
+          ANTARCTICA_BALE_TOKEN: ${{ secrets.ANTARCTICA_BALE_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: python antarctica_report.py
