@@ -9,13 +9,12 @@ load_dotenv()
 from telegram import Bot as TelegramBot
 from jalali import now_jalali
 
-# --- توکن‌های مخصوص ربات‌های جنوبگان ---
 ANTARCTICA_TELEGRAM_TOKEN = os.getenv("ANTARCTICA_TELEGRAM_TOKEN")
 ANTARCTICA_BALE_TOKEN = os.getenv("ANTARCTICA_BALE_TOKEN")
 GIST_ID = os.getenv("GIST_ID")
 GH_PAT = os.getenv("GH_PAT")
 
-# --- ایستگاه‌های قطب جنوب (فقط آب‌وهوا) ---
+# --- ایستگاه‌های قطب جنوب ---
 ANTARCTICA_STATIONS = [
     {"name": "Vostok (روسیه)", "temp": "-45°C تا -55°C", "coord": "۷۸°۲۷′ جنوبی، ۱۰۶°۵۰′ شرقی"},
     {"name": "Amundsen-Scott (آمریکا)", "temp": "-44°C تا -46°C", "coord": "۹۰° جنوبی"},
@@ -23,6 +22,35 @@ ANTARCTICA_STATIONS = [
     {"name": "Maitri (هند)", "temp": "-13°C تا -32°C", "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی"},
     {"name": "Zhongshan (چین)", "temp": "-12°C تا -18°C", "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی"},
     {"name": "Esperanza (آرژانتین)", "temp": "4°C تا 8°C", "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی"},
+]
+
+# --- اخبار جدید و منابع علمی ---
+ANTARCTICA_NEWS = [
+    {
+        "title": "کاهش بی‌سابقه یخ‌های دریایی قطب جنوب (NSIDC/NASA)",
+        "text": "داده‌های ماهواره‌ای نشان می‌دهد حداکثر وسعت یخ‌های دریایی در سال ۲۰۲۶ به حدود ۱۷.۵۹ میلیون کیلومتر مربع رسیده که سومین رکورد پایین‌ترین میزان از سال ۱۹۷۸ است.",
+        "link": "https://nsidc.org/sea-ice-today"
+    },
+    {
+        "title": "کشف اولین ردپای پستاندار در قطب جنوب (Cambridge)",
+        "text": "فسیل ردپای یک پستاندار گوشت‌خوار کوچک به قدمت ۵۵.۵ میلیون سال در جزیره کینگ جورج کشف شد که نشان‌دهنده اکوسیستم پیچیده پیش از یخبندان است.",
+        "link": "https://www.cambridge.org/core/journals/antarctic-science"
+    },
+    {
+        "title": "نقش مدفوع پنگوئن‌ها در تسریع ذوب یخ‌ها",
+        "text": "مطالعات جدید نشان می‌دهد گوانو (مدفوع) پنگوئن‌ها با رشد جلبک‌های سبز برفی، جذب نور خورشید را افزایش داده و به ذوب سریع‌تر یخ‌ها کمک می‌کند.",
+        "link": "https://polarresearch.net/index.php/polar"
+    },
+    {
+        "title": "جایزه نوبل فیزیک ۲۰۲۶ برای رصدخانه یخی IceCube",
+        "text": "پروفسور فرانسیس هالزن به دلیل ساخت رصدخانه نوترینو IceCube در عمق یخ‌های قطب جنوب موفق به دریافت جایزه نوبل فیزیک شد.",
+        "link": "https://icecube.wisc.edu/"
+    },
+    {
+        "title": "عضویت کشورهای جدید در SCAR",
+        "text": "در سی و نهمین نشست دبیران SCAR در اسلو، امارات متحده عربی و کاستاریکا به عنوان اعضای جدید به این کمیته پیوستند و تعداد اعضا به ۴۸ کشور رسید.",
+        "link": "https://scar.org/"
+    }
 ]
 
 def get_gist_users(filename):
@@ -38,7 +66,7 @@ def get_gist_users(filename):
         return {}
 
 def build_message():
-    msg = "🧊 **گزارش آب‌وهوای جنوبگان** 🧊\n\n📅 " + now_jalali() + "\n"
+    msg = "🧊 **گزارش آب‌وهوا و اخبار جنوبگان** 🧊\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
     
     msg += "🌡️ **دمای ایستگاه‌های تحقیقاتی (امروز):**\n\n"
@@ -47,8 +75,15 @@ def build_message():
         msg += f"   🌡️ دما: {st['temp']}\n"
         msg += f"   🗺️ مختصات: {st['coord']}\n"
         msg += "   ➖➖➖➖➖➖\n"
+    
+    msg += "\n━━━━━━━━━━━━━━━\n\n"
+    msg += "📰 **آخرین اخبار و پژوهش‌های علمی:**\n\n"
+    for news in ANTARCTICA_NEWS:
+        msg += f"🔹 **{news['title']}**\n"
+        msg += f"   {news['text']}\n"
+        msg += f"   🔗 {news['link']}\n\n"
         
-    msg += "\n━━━━━━━━━━━━━━━\n"
+    msg += "━━━━━━━━━━━━━━━\n"
     return msg
 
 async def send_telegram(msg):
@@ -84,7 +119,7 @@ def send_bale(msg):
             print("  Bale Failed:", cid, e)
 
 async def main():
-    print("=" * 60 + "\nگزارش آب‌وهوای جنوبگان - " + now_jalali() + "\n" + "=" * 60)
+    print("=" * 60 + "\nگزارش جنوبگان - " + now_jalali() + "\n" + "=" * 60)
     msg = build_message()
     await send_telegram(msg)
     send_bale(msg)
