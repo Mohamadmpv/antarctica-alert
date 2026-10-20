@@ -2,7 +2,8 @@ name: Antarctica Report
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    # هر ۱ ساعت، دقیقه ۱۷ (برای فرار از ازدحام GitHub در دقیقه ۰)
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 jobs:
