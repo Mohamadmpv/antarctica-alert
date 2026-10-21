@@ -28,16 +28,15 @@ ANTARCTICA_STATIONS = [
 
 WIND_THRESHOLD = 50
 
-# --- اخبار پژوهشی و عمومی (لینک مستقیم) ---
+# --- اخبار پژوهشی و عمومی ---
 ANTARCTICA_RESEARCH_NEWS = [
     {"title": "سوراخ لایه اوزون در سال ۲۰۲۶ بزرگ‌تر شد", "text": "سوراخ لایه اوزون بر فراز قطب جنوب در سپتامبر ۲۰۲۶ به حدود ۲۷.۴ میلیون کیلومتر مربع رسید.", "link": "https://www.khabaronline.ir/news/2279751"},
     {"title": "کاهش بی‌سابقه یخ‌های دریایی (NSIDC/NASA)", "text": "حداکثر وسعت یخ‌های دریایی در سال ۲۰۲۶ به حدود ۱۷.۵۹ میلیون کیلومتر مربع رسید.", "link": "https://nsidc.org/sea-ice-today"},
-    {"title": "جایزه نوبل فیزیک ۲۰۲۶ برای رصدخانه یخی IceCube", "text": "پروفسور فرانسیس هالزن به دلیل ساخت رصدخانه نوترینو IceCube در عمق یخ‌های قطب جنوب موفق به دریافت جایزه نوبل فیزیک شد.", "link": "https://icecube.wisc.edu/"}
 ]
 
 ANTARCTICA_GENERAL_NEWS = [
     {"title": "عضویت کشورهای جدید در SCAR", "text": "در سی و نهمین نشست دبیران SCAR در اسلو، امارات متحده عربی و کاستاریکا به این کمیته پیوستند.", "link": "https://scar.org/scar-news/scar-delegates-meeting-2026"},
-    {"title": "مشاهده نادر پنگوئن آدلی در عمق خشکی", "text": "یک پنگوئن آدلی در فاصله ۲۰۰ کیلومتری از دریای باز در سرزمین ملکه مود مشاهده شد.", "link": "https://polarresearch.net/index.php/polar"}
+    {"title": "مشاهده نادر پنگوئن آدلی در عمق خشکی", "text": "یک پنگوئن آدلی در فاصله ۲۰۰ کیلومتری از دریای باز در سرزمین ملکه مود مشاهده شد.", "link": "https://polarresearch.net/index.php/polar"},
 ]
 
 def get_gist_users(filename):
@@ -63,50 +62,12 @@ def get_weather_data(lat, lon):
         print(f"Open-Meteo error: {e}")
         return None
 
-def get_kp_index():
-    """دریافت شاخص Kp (شفق قطبی) از NOAA"""
-    try:
-        r = requests.get("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        if len(data) > 1:
-            latest = data[-1]
-            return {"kp": latest[1], "time": latest[0]}
-        return None
-    except Exception as e:
-        print("Kp error:", e)
-        return None
-
-def get_earthquakes():
-    """دریافت زمین‌لرزه‌های اخیر جنوبگان از USGS"""
-    url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    params = {
-        "format": "geojson",
-        "minlatitude": -90,
-        "maxlatitude": -60,
-        "minmagnitude": 4.0,
-        "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"),
-        "orderby": "time"
-    }
-    try:
-        r = requests.get(url, params=params, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        quakes = []
-        for f in data["features"][:3]:
-            props = f["properties"]
-            quakes.append({"mag": props["mag"], "place": props["place"]})
-        return quakes
-    except Exception as e:
-        print("USGS error:", e)
-        return []
-
 def get_latest_paper():
-    """دریافت جدیدترین مقاله از CrossRef"""
+    """دریافت جدیدترین مقاله از CrossRef با Abstract"""
     url = "https://api.crossref.org/works"
     params = {
         "query": "Antarctica",
-        "filter": "from-pub-date:2026-01-01",
+        "filter": "from-pub-date:2026-01-01,type:journal-article",
         "rows": 1,
         "sort": "published",
         "order": "desc"
@@ -119,7 +80,10 @@ def get_latest_paper():
             item = data["message"]["items"][0]
             title = item.get("title", ["بدون عنوان"])[0]
             doi = item.get("DOI", "")
-            return {"title": title, "link": f"https://doi.org/{doi}"}
+            abstract = item.get("abstract", "چکیده در دسترس نیست.")
+            # تمیز کردن تگ‌های HTML از abstract
+            abstract = abstract.replace("<jats:p>", "").replace("</jats:p>", "").replace("<jats:title>", "").replace("</jats:title>", "")[:300] + "..."
+            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract}
         return None
     except Exception as e:
         print("CrossRef error:", e)
@@ -135,17 +99,15 @@ def get_webcam_image():
     except Exception:
         return None
 
-def build_message():
-    msg = "🧊 **گزارش علمی جنوبگان** 🧊\n\n📅 " + now_jalali() + "\n"
+def build_weather_message():
+    msg = "🌡️ **دمای ایستگاه‌های جنوبگان** 🌡️\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
     
-    # ۱. دما و طوفان
     alerts = []
-    msg += "🌡️ **دمای ایستگاه‌ها (لحظه‌ای):**\n\n"
     for st in ANTARCTICA_STATIONS:
         data = get_weather_data(st["lat"], st["lon"])
         if not data or "current" not in data:
-            msg += f"📍 **{st['name']}**: داده در دسترس نیست\n\n"
+            msg += f"📍 **{st['name']}**: داده در دسترس نیست\n"
             continue
         c = data["current"]
         temp, wind = c.get("temperature_2m"), c.get("wind_speed_10m")
@@ -157,35 +119,31 @@ def build_message():
         msg += "\n🚨 **هشدار طوفان!**\n"
         for a in alerts: msg += f"⚠️ **{a['station']}**: {a['wind']} km/h\n"
     
-    # ۲. شفق قطبی (Kp)
-    msg += "\n━━━━━━━━━━━━━━━\n\n"
-    kp = get_kp_index()
-    if kp:
-        msg += f"🌌 **شفق قطبی (Kp):** {kp['kp']} ({kp['time']})\n"
-    else:
-        msg += "🌌 **شفق قطبی:** داده در دسترس نیست\n"
+    msg += "\n━━━━━━━━━━━━━━━\n"
+    return msg
 
-    # ۳. زمین‌لرزه‌ها
-    quakes = get_earthquakes()
-    if quakes:
-        msg += "\n🌍 **زمین‌لرزه‌های اخیر (M4+):**\n"
-        for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
-
-    # ۴. مقاله علمی هفته
-    msg += "\n━━━━━━━━━━━━━━━\n\n"
+def build_paper_message():
     paper = get_latest_paper()
-    if paper:
-        msg += f"📄 **مقاله علمی هفته:**\n   {paper['title']}\n   🔗 {paper['link']}\n"
-    else:
-        msg += "📄 **مقاله علمی:** داده در دسترس نیست\n"
+    if not paper:
+        return None
+    
+    msg = "📄 **مقاله علمی هفته (جنوبگان)** 📄\n\n"
+    msg += f"🔹 **{paper['title']}**\n\n"
+    msg += f"📝 **چکیده:**\n{paper['abstract']}\n\n"
+    msg += f"🔗 {paper['link']}\n"
+    msg += "\n━━━━━━━━━━━━━━━\n"
+    return msg
 
-    # ۵. اخبار
-    msg += "\n━━━━━━━━━━━━━━━\n\n📰 **اخبار پژوهشی:**\n"
-    for n in ANTARCTICA_RESEARCH_NEWS[:2]:
+def build_news_message():
+    msg = "📰 **اخبار و پژوهش‌های جنوبگان** 📰\n\n📅 " + now_jalali() + "\n"
+    msg += "━━━━━━━━━━━━━━━\n\n"
+    
+    msg += "🔬 **اخبار پژوهشی:**\n"
+    for n in ANTARCTICA_RESEARCH_NEWS:
         msg += f"🔹 **{n['title']}**\n   {n['text']}\n   🔗 {n['link']}\n\n"
 
-    msg += "\n🐾 **اخبار عمومی:**\n"
-    for n in ANTARCTICA_GENERAL_NEWS[:2]:
+    msg += "🐾 **اخبار عمومی:**\n"
+    for n in ANTARCTICA_GENERAL_NEWS:
         msg += f"🔹 **{n['title']}**\n   {n['text']}\n   🔗 {n['link']}\n\n"
         
     msg += "━━━━━━━━━━━━━━━\n"
@@ -195,21 +153,18 @@ async def send_telegram(msg, image_bytes=None):
     users = get_gist_users("antarctica_telegram_users.json")
     if not users: return
     bot = TelegramBot(token=ANTARCTICA_TELEGRAM_TOKEN)
-    print("Telegram recipients:", len(users))
     for cid in users.keys():
         try:
             if image_bytes:
                 await bot.send_photo(chat_id=cid, photo=InputFile(BytesIO(image_bytes), filename="south_pole.jpg"), caption=msg)
             else:
                 await bot.send_message(chat_id=cid, text=msg)
-            print("  TG Sent:", cid)
         except Exception as e:
             print("  TG Failed:", cid, e)
 
 def send_bale(msg, image_bytes=None):
     users = get_gist_users("antarctica_bale_users.json")
     if not users: return
-    print("Bale recipients:", len(users))
     if not ANTARCTICA_BALE_TOKEN: return
     bale_msg = msg + ("\n📷 [مشاهده تصویر زنده](https://gmd-int.cmdl.noaa.gov/obop/spo/livecamera.html)" if image_bytes else "")
     for cid in users.keys():
@@ -217,16 +172,36 @@ def send_bale(msg, image_bytes=None):
         try:
             r = requests.post(url, json={"chat_id": cid, "text": bale_msg, "parse_mode": "Markdown"}, timeout=30)
             r.raise_for_status()
-            print("  Bale Sent:", cid)
         except Exception as e:
             print("  Bale Failed:", cid, e)
 
 async def main():
     print("=" * 60 + "\nگزارش جنوبگان - " + now_jalali() + "\n" + "=" * 60)
-    msg = build_message()
+    
+    # ۱. ارسال پیام آب‌وهوا (همیشه)
+    weather_msg = build_weather_message()
     image_bytes = get_webcam_image()
-    await send_telegram(msg, image_bytes)
-    send_bale(msg, image_bytes)
+    await send_telegram(weather_msg, image_bytes)
+    send_bale(weather_msg, image_bytes)
+    print("Weather sent.")
+
+    # ۲. ارسال مقاله علمی (هر ۲ روز یک بار - بر اساس روز فرد/زوج)
+    today = datetime.now().day
+    if today % 2 == 0:  # فقط در روزهای زوج
+        paper_msg = build_paper_message()
+        if paper_msg:
+            await send_telegram(paper_msg)
+            send_bale(paper_msg)
+            print("Paper sent.")
+
+    # ۳. ارسال اخبار (هر ۱۲ ساعت - یعنی ۲ بار در روز)
+    # برای سادگی، هر بار که این کد اجرا می‌شه، اخبار هم می‌ره. 
+    # اگه می‌خوای فقط ۲ بار در روز باشه، باید در Workflow ساعت‌بندی کنیم.
+    news_msg = build_news_message()
+    await send_telegram(news_msg)
+    send_bale(news_msg)
+    print("News sent.")
+
     print("Done.")
 
 if __name__ == "__main__":
