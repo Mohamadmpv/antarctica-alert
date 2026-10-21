@@ -17,7 +17,7 @@ ANTARCTICA_BALE_TOKEN = os.getenv("ANTARCTICA_BALE_TOKEN")
 GIST_ID = os.getenv("GIST_ID")
 GH_PAT = os.getenv("GH_PAT")
 
-WIND_THRESHOLD = 50
+WIND_THRESHOLD = 50  # آستانه هشدار طوفان
 
 # --- ایستگاه‌های قطب جنوب ---
 ANTARCTICA_STATIONS = [
@@ -27,6 +27,15 @@ ANTARCTICA_STATIONS = [
     {"name": "Maitri (هند)", "lat": -70.7500, "lon": 11.7167, "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی"},
     {"name": "Zhongshan (چین)", "lat": -69.3667, "lon": 76.3667, "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی"},
     {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833, "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی"},
+]
+
+# --- لیست معرفی ایستگاه‌ها (برای چرخش روزانه) ---
+STATION_PROFILES = [
+    {"name": "Vostok (روسیه)", "desc": "ایستگاه وستوک در ارتفاع ۳,۴۸۸ متری از سطح دریا قرار دارد و سردترین دمای ثبت‌شده روی زمین (منفی ۸۹.۲ درجه سانتی‌گراد) در این ایستگاه ثبت شده است. این ایستگاه به دلیل کشف هسته یخی که اطلاعات ۴۲۰,۰۰۰ ساله اقلیم زمین را در خود دارد، بسیار مشهور است."},
+    {"name": "Amundsen-Scott (آمریکا)", "desc": "این ایستگاه دقیقاً در قطب جنوب جغرافیایی (۹۰ درجه جنوبی) قرار دارد. به دلیل موقعیت خاص خود، شش ماه از سال را در روشنایی کامل و شش ماه را در تاریکی مطلق سپری می‌کند. تحقیقات اصلی آن شامل نجوم، فیزیک جو و یخ‌شناسی است."},
+    {"name": "Maitri (هند)", "desc": "ایستگاه میتری هند در منطقه ای با شرایط جوی نسبتاً ملایم‌تر قرار دارد و به عنوان پایگاهی برای تحقیقات زمین‌شناسی، یخ‌شناسی و مطالعه لایه ازن استفاده می‌شود. این ایستگاه در سال ۱۹۸۹ تأسیس شد."},
+    {"name": "Zhongshan (چین)", "desc": "ایستگاه ژونگشان چین در خلیج پریدز واقع شده و به عنوان یک مرکز تحقیقاتی چندمنظوره فعالیت می‌کند. این ایستگاه در سال ۱۹۸۹ تأسیس شد و به مطالعه اقلیم، زیست‌شناسی دریایی و یخ‌شناسی می‌پردازد."},
+    {"name": "Esperanza (آرژانتین)", "desc": "ایستگاه اسپرانزا آرژانتین یکی از معدود ایستگاه‌هایی است که در آن خانواده‌ها (با کودکان) نیز زندگی می‌کنند. این ایستگاه در سال ۱۹۵۲ تأسیس شد و به عنوان یک پایگاه دائمی آرژانتین در جنوبگان شناخته می‌شود."},
 ]
 
 def get_gist_file(filename):
@@ -72,7 +81,6 @@ def get_weather_data(lat, lon):
         return None
 
 def get_kp_index():
-    """دریافت شاخص Kp از NOAA"""
     try:
         r = requests.get("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", timeout=30)
         r.raise_for_status()
@@ -84,36 +92,53 @@ def get_kp_index():
     return None
 
 def get_earthquakes():
-    """دریافت زمین‌لرزه‌های اخیر جنوبگان از USGS"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    params = {
-        "format": "geojson",
-        "minlatitude": -90,
-        "maxlatitude": -60,
-        "minmagnitude": 4.0,
-        "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"),
-        "orderby": "time"
-    }
+    params = {"format": "geojson", "minlatitude": -90, "maxlatitude": -60, "minmagnitude": 4.0, "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"), "orderby": "time"}
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
-        return [{"mag": f["properties"]["mag"], "place": f["properties"]["place"], "time": f["properties"]["time"]} for f in data["features"][:3]]
+        return [{"mag": f["properties"]["mag"], "place": f["properties"]["place"]} for f in data["features"][:3]]
     except Exception as e:
         print("USGS error:", e)
         return []
 
 def get_latest_paper():
-    """دریافت مقاله جدید با چکیده از CrossRef"""
-    url = "https://api.crossref.org/works"
-    params = {
-        "query": "Antarctica",
-        "filter": "from-pub-date:2026-01-01,type:journal-article",
-        "rows": 1,
-        "sort": "published",
-        "order": "desc"
-    }
+    """دریافت مقاله جدید با چکیده از OpenAlex (اولویت) و CrossRef"""
+    # تلاش اول: OpenAlex
     try:
+        url = "https://api.openalex.org/works"
+        params = {"filter": "title_and_abstract.search:Antarctica,from_publication_date:2026-01-01", "per-page": 1, "sort": "publication_date:desc"}
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        if data["results"]:
+            item = data["results"][0]
+            title = item.get("title", "بدون عنوان")
+            doi = item.get("doi", "").replace("https://doi.org/", "")
+            abstract = item.get("abstract_inverted_index", {})
+            if abstract:
+                words = {}
+                for word, positions in abstract.items():
+                    for pos in positions:
+                        words[pos] = word
+                abstract_text = " ".join(words[i] for i in sorted(words.keys()))
+                if len(abstract_text) > 400:
+                    abstract_text = abstract_text[:400] + "..."
+            else:
+                abstract_text = "چکیده در دسترس نیست."
+            
+            authors = item.get("authorships", [])
+            first_author = authors[0]["author"]["display_name"] if authors else "نامشخص"
+            
+            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract_text, "author": first_author}
+    except Exception as e:
+        print("OpenAlex error:", e)
+    
+    # تلاش دوم: CrossRef
+    try:
+        url = "https://api.crossref.org/works"
+        params = {"query": "Antarctica", "filter": "from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
@@ -122,22 +147,20 @@ def get_latest_paper():
             title = item.get("title", ["بدون عنوان"])[0]
             doi = item.get("DOI", "")
             abstract = item.get("abstract", "")
-            
-            # تمیز کردن چکیده
             if abstract:
                 abstract = re.sub(r'<[^>]+>', '', abstract)
                 abstract = ' '.join(abstract.split())
                 if len(abstract) > 400:
                     abstract = abstract[:400] + "..."
             else:
-                # اگر چکیده نبود، خودمان یک توضیح دو خطی می‌نویسیم
-                abstract = f"این مقاله به بررسی جنبه‌های علمی و پژوهشی منطقه جنوبگان می‌پردازد. برای مطالعه جزئیات کامل، از لینک زیر استفاده کنید."
-            
-            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract}
-        return None
+                abstract = "چکیده در دسترس نیست."
+            authors = item.get("author", [])
+            first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
+            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
     except Exception as e:
         print("CrossRef error:", e)
-        return None
+    
+    return None
 
 def get_webcam_image():
     image_url = "https://gmd-int.cmdl.noaa.gov/obop/spo/latest.jpg"
@@ -194,56 +217,49 @@ def build_paper_message():
     paper = get_latest_paper()
     if not paper:
         return None
-    msg = "📄 **مقاله علمی هفته (جنوبگان)** 📄\n\n"
+    msg = "📄 **مقاله علمی روز (جنوبگان)** 📄\n\n"
     msg += f"🔹 **{paper['title']}**\n\n"
+    msg += f"👤 **نویسنده اول:** {paper['author']}\n\n"
     msg += f"📝 **چکیده:**\n{paper['abstract']}\n\n"
     msg += f"🔗 {paper['link']}\n"
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
-def build_news_message():
-    """اخبار از منابع معتبر با جلوگیری از تکرار"""
-    sent_news = get_gist_users("sent_news.json")
+def build_station_activity_message():
+    """فعالیت‌های ایستگاه‌های قطب جنوب از اخبار رسمی"""
+    msg = "🏗️ **فعالیت‌های ایستگاه‌های جنوبگان** 🏗️\n\n📅 " + now_jalali() + "\n"
+    msg += "━━━━━━━━━━━━━━━\n\n"
     
-    news_pool = [
+    activities = [
         {
-            "id": "casey_airdrop_2026_10",
-            "title": "آغاز تابستان در ایستگاه کیسی با فرود محموله‌های حیاتی",
-            "text": "برنامه قطب جنوب استرالیا اعلام کرد که با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها، فصل تابستان در ایستگاه کیسی رسماً آغاز شد.",
+            "title": "ایستگاه Casey (استرالیا): آغاز تابستان با فرود C-17",
+            "text": "فصل تابستان در ایستگاه کیسی با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها آغاز شد. محموله‌های تازه شامل میوه و مرکبات نیز به ایستگاه رسید.",
             "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"
         },
         {
-            "id": "noosfera_season_2026",
-            "title": "شروع ششمین فصل تحقیقاتی یخ‌شکن نووسفرا در قطب جنوب",
-            "text": "کشتی تحقیقاتی اوکراین (نووسفرا) سفر خود را از کیپ‌تاون به سمت قطب جنوب آغاز کرد. این کشتی ابتدا به ایستگاه لهستانی آرتسوفسکی می‌رود و سپس محققان را به ایستگاه آکادمیک ورنادسکی می‌رساند.",
-            "link": "https://ua.korrespondent.net/tech/science/4919650-ukrainskyi-kryholam-noosfera-rozpochav-antarktychnyi-sezon"
-        },
-        {
-            "id": "uae_scar_membership_2026",
-            "title": "امارات متحده عربی اولین کشور عربی عضو SCAR شد",
-            "text": "امارات متحده عربی به عنوان عضو وابسته به کمیته علمی تحقیقات قطب جنوب (SCAR) پیوست. این عضویت در آگوست ۲۰۲۶ و در جریان نشست نمایندگان SCAR در اسلو تصویب شد.",
-            "link": "https://www.emirates247.com/search-7.117?t=b&q=technology&s=d&p=6"
+            "title": "ایستگاه Mawson (استرالیا): زندگی روزمره و پژوهش",
+            "text": "خدمه ایستگاه ماوسون در حال انجام وظایف روزانه مانند کمک در آشپزخانه، نگهداری از باغ سبزی هیدروپونیک و شرکت در تحقیقات مربوط به اثرات انزوا بر سلامت انسان هستند. آنها همچنین به دانشمندانی که از راه دور پروژه‌ها را مدیریت می‌کنند، کمک می‌کنند.",
+            "link": "https://www.antarctica.gov.au/news/stations/mawson/2026/24-april/"
         }
     ]
     
-    new_news = []
-    for news in news_pool:
-        if news["id"] not in sent_news:
-            new_news.append(news)
-            sent_news[news["id"]] = datetime.now().isoformat()
-    
-    if not new_news:
-        return None
-    
-    save_gist_file("sent_news.json", json.dumps(sent_news, ensure_ascii=False, indent=2))
-    
-    msg = "📰 **اخبار و پژوهش‌های جنوبگان** 📰\n\n📅 " + now_jalali() + "\n"
-    msg += "━━━━━━━━━━━━━━━\n\n"
-    
-    for n in new_news:
-        msg += f"🔹 **{n['title']}**\n   {n['text']}\n   🔗 {n['link']}\n\n"
+    for act in activities:
+        msg += f"🔹 **{act['title']}**\n   {act['text']}\n   🔗 {act['link']}\n\n"
     
     msg += "━━━━━━━━━━━━━━━\n"
+    return msg
+
+def build_station_profile_message():
+    """معرفی روزانه یک ایستگاه (چرخشی)"""
+    # انتخاب ایستگاه بر اساس روز ماه (چرخش خودکار)
+    day_of_month = datetime.now().day
+    profile = STATION_PROFILES[day_of_month % len(STATION_PROFILES)]
+    
+    msg = "🏛️ **معرفی ایستگاه جنوبگان** 🏛️\n\n📅 " + now_jalali() + "\n"
+    msg += "━━━━━━━━━━━━━━━\n\n"
+    msg += f"📍 **{profile['name']}**\n\n"
+    msg += f"{profile['desc']}\n"
+    msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
 async def send_telegram(msg, image_bytes=None):
@@ -278,14 +294,14 @@ def send_bale(msg, image_bytes=None):
 async def main():
     print("=" * 60 + "\nگزارش جنوبگان - " + now_jalali() + "\n" + "=" * 60)
     
-    # ۱. پیام آب‌وهوا
+    # ۱. پیام آب‌وهوا (همیشه)
     weather_msg, alerts = build_weather_message()
     image_bytes = get_webcam_image()
     await send_telegram(weather_msg, image_bytes)
     send_bale(weather_msg, image_bytes)
     print("Weather sent.")
 
-    # ۲. هشدار فوری (جداگانه)
+    # ۲. هشدار فوری طوفان (جداگانه، اگر باد > ۵۰)
     if alerts:
         alert_msg = "🚨 **هشدار فوری طوفان در قطب جنوب** 🚨\n\n"
         alert_msg += "📅 " + now_jalali() + "\n"
@@ -297,27 +313,30 @@ async def main():
         send_bale(alert_msg)
         print("Storm alert sent.")
 
-    # ۳. داده‌های علمی
+    # ۳. داده‌های علمی (شفق و زلزله)
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
     print("Scientific data sent.")
 
-    # ۴. مقاله علمی
+    # ۴. مقاله علمی روز
     paper_msg = build_paper_message()
     if paper_msg:
         await send_telegram(paper_msg)
         send_bale(paper_msg)
         print("Paper sent.")
 
-    # ۵. اخبار
-    news_msg = build_news_message()
-    if news_msg:
-        await send_telegram(news_msg)
-        send_bale(news_msg)
-        print("News sent.")
-    else:
-        print("No new news.")
+    # ۵. فعالیت‌های ایستگاه‌ها (هر ۱۲ ساعت)
+    activity_msg = build_station_activity_message()
+    await send_telegram(activity_msg)
+    send_bale(activity_msg)
+    print("Station activities sent.")
+
+    # ۶. معرفی ایستگاه (هر روز یک ایستگاه)
+    profile_msg = build_station_profile_message()
+    await send_telegram(profile_msg)
+    send_bale(profile_msg)
+    print("Station profile sent.")
 
     print("Done.")
 
