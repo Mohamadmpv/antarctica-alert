@@ -2,7 +2,6 @@ name: Antarctica Report
 
 on:
   schedule:
-    # هر ۱ ساعت (برای هشدار طوفان و داده‌های علمی)
     - cron: '17 * * * *'
   workflow_dispatch:
 
@@ -21,4 +20,6 @@ jobs:
           ANTARCTICA_BALE_TOKEN: ${{ secrets.ANTARCTICA_BALE_TOKEN }}
           GIST_ID: ${{ secrets.GIST_ID }}
           GH_PAT: ${{ secrets.GH_PAT }}
+          # این خط فقط وقتی دستی اجرا کنی true می‌شه
+          FORCE_ALL_TEST: ${{ github.event_name == 'workflow_dispatch' }}
         run: python antarctica_report.py

@@ -300,23 +300,30 @@ async def main():
     current_hour = now_tehran.hour
     is_even_day = (now_tehran.day % 2 == 0)
     
-    # ۱. هشدار طوفان و داده‌های علمی (هر ساعت)
+    # اگر از طریق GitHub Actions با گزینه "Run workflow" اجرا شود،
+    # یا متغیر محیطی FORCE_ALL تنظیم شده باشد، همه بخش‌ها را بفرست
+    is_manual_run = os.getenv("FORCE_ALL_TEST", "false").lower() == "true"
+    
+    # ۱. هشدار طوفان و داده‌های علمی (همیشه)
     weather_msg, alerts = build_weather_message()
-    if alerts:
-        alert_msg = "🚨 **هشدار فوری طوفان در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
-        for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
-        alert_msg += "━━━━━━━━━━━━━━━\n"
-        await send_telegram(alert_msg)
-        send_bale(alert_msg)
-        print("Storm alert sent.")
+    if alerts or is_manual_run:
+        if alerts:
+            alert_msg = "🚨 **هشدار فوری طوفان در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
+            for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
+            alert_msg += "━━━━━━━━━━━━━━━\n"
+            await send_telegram(alert_msg)
+            send_bale(alert_msg)
+            print("Storm alert sent.")
+        else:
+            print("No storm alerts (wind < 50).")
 
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
     print("Scientific data sent.")
 
-    # ۲. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸)
-    if current_hour in [6, 18]:
+    # ۲. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی)
+    if current_hour in [6, 18] or is_manual_run:
         image_bytes = get_webcam_image()
         await send_telegram(weather_msg, image_bytes)
         send_bale(weather_msg, image_bytes)
@@ -335,16 +342,16 @@ async def main():
         else:
             print("No new news.")
 
-    # ۳. مقاله علمی (روزهای فرد، ساعت ۶ صبح)
-    if current_hour == 6 and not is_even_day:
+    # ۳. مقاله علمی (روزهای فرد، ساعت ۶ صبح یا اجرای دستی)
+    if (current_hour == 6 and not is_even_day) or is_manual_run:
         paper_msg = build_paper_message()
         if paper_msg:
             await send_telegram(paper_msg)
             send_bale(paper_msg)
             print("Paper sent.")
 
-    # ۴. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح)
-    if current_hour == 6 and is_even_day:
+    # ۴. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی)
+    if (current_hour == 6 and is_even_day) or is_manual_run:
         book_msg = build_book_message()
         await send_telegram(book_msg)
         send_bale(book_msg)
