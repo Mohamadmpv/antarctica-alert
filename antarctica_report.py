@@ -16,7 +16,7 @@ ANTARCTICA_BALE_TOKEN = os.getenv("ANTARCTICA_BALE_TOKEN")
 GIST_ID = os.getenv("GIST_ID")
 GH_PAT = os.getenv("GH_PAT")
 
-# --- ایستگاه‌های قطب جنوب با مختصات دقیق (برای دریافت دمای زنده) ---
+# --- ایستگاه‌های قطب جنوب ---
 ANTARCTICA_STATIONS = [
     {"name": "Vostok (روسیه)", "lat": -78.4645, "lon": 106.8317},
     {"name": "Amundsen-Scott (آمریکا)", "lat": -90.0, "lon": 0.0},
@@ -26,44 +26,18 @@ ANTARCTICA_STATIONS = [
     {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833},
 ]
 
-WIND_THRESHOLD = 50  # km/h
+WIND_THRESHOLD = 50
 
-# --- اخبار پژوهشی (لینک مستقیم به مقاله یا خبر) ---
+# --- اخبار پژوهشی و عمومی (لینک مستقیم) ---
 ANTARCTICA_RESEARCH_NEWS = [
-    {
-        "title": "سوراخ لایه اوزون در سال ۲۰۲۶ بزرگ‌تر شد",
-        "text": "سوراخ لایه اوزون بر فراز قطب جنوب در سپتامبر ۲۰۲۶ به حدود ۲۷.۴ میلیون کیلومتر مربع رسید و به بزرگ‌ترین اندازه خود در حدود ۲۰ سال گذشته نزدیک شد.",
-        "link": "https://www.khabaronline.ir/news/2279751/%D8%B3%D9%88%D8%B1%D8%A7%D8%AE-%D9%84%D8%A7%DB%8C%D9%87-%D8%A7%D9%88%D8%B2%D9%88%D9%86-%D8%A7%D9%85%D8%B3%D8%A7%D9%84-%D8%A8%D8%B2%D8%B1%DA%AF-%D8%AA%D8%B1-%D8%B4%D8%AF-%D9%86%D8%B4%D8%A7%D9%86%D9%87-%D9%87%D8%A7%DB%8C%D8%B4-%D8%A7%D8%B2-%D9%85%D8%A7%D9%87-%D9%87%D8%A7-%D9%82%D8%A8%D9%84"
-    },
-    {
-        "title": "کاهش بی‌سابقه یخ‌های دریایی (NSIDC/NASA)",
-        "text": "حداکثر وسعت یخ‌های دریایی در سال ۲۰۲۶ به حدود ۱۷.۵۹ میلیون کیلومتر مربع رسید که سومین رکورد پایین‌ترین میزان از سال ۱۹۷۸ است.",
-        "link": "https://nsidc.org/sea-ice-today"
-    },
-    {
-        "title": "جایزه نوبل فیزیک ۲۰۲۶ برای رصدخانه یخی IceCube",
-        "text": "پروفسور فرانسیس هالزن به دلیل ساخت رصدخانه نوترینو IceCube در عمق یخ‌های قطب جنوب موفق به دریافت جایزه نوبل فیزیک شد.",
-        "link": "https://icecube.wisc.edu/"
-    },
-    {
-        "title": "افزایش موقت یخ‌های دریایی قطب جنوب با گرم شدن اقیانوس‌های گرمسیری مرتبط است (Nature)",
-        "text": "تحقیق جدیدی در Nature نشان می‌دهد که افزایش موقت یخ‌های دریایی قطب جنوب با گرم شدن اقیانوس‌های گرمسیری مرتبط است، اما این موضوع نشان‌دهنده معکوس شدن روند بلندمدت ذوب یخ‌ها نیست.",
-        "link": "https://doi.org/10.1038/s41586-026-10912-x"
-    }
+    {"title": "سوراخ لایه اوزون در سال ۲۰۲۶ بزرگ‌تر شد", "text": "سوراخ لایه اوزون بر فراز قطب جنوب در سپتامبر ۲۰۲۶ به حدود ۲۷.۴ میلیون کیلومتر مربع رسید.", "link": "https://www.khabaronline.ir/news/2279751"},
+    {"title": "کاهش بی‌سابقه یخ‌های دریایی (NSIDC/NASA)", "text": "حداکثر وسعت یخ‌های دریایی در سال ۲۰۲۶ به حدود ۱۷.۵۹ میلیون کیلومتر مربع رسید.", "link": "https://nsidc.org/sea-ice-today"},
+    {"title": "جایزه نوبل فیزیک ۲۰۲۶ برای رصدخانه یخی IceCube", "text": "پروفسور فرانسیس هالزن به دلیل ساخت رصدخانه نوترینو IceCube در عمق یخ‌های قطب جنوب موفق به دریافت جایزه نوبل فیزیک شد.", "link": "https://icecube.wisc.edu/"}
 ]
 
-# --- اخبار عمومی (حیات وحش و رویدادها) ---
 ANTARCTICA_GENERAL_NEWS = [
-    {
-        "title": "عضویت کشورهای جدید در SCAR",
-        "text": "در سی و نهمین نشست دبیران SCAR در اسلو، امارات متحده عربی و کاستاریکا به عنوان اعضای جدید به این کمیته پیوستند و تعداد اعضا به ۴۸ کشور رسید.",
-        "link": "https://scar.org/scar-news/scar-delegates-meeting-2026"
-    },
-    {
-        "title": "مشاهده نادر پنگوئن آدلی در عمق خشکی",
-        "text": "در ژانویه ۲۰۲۶، یک پنگوئن آدلی در ایستگاه تحقیقاتی ترول در سرزمین ملکه مود، در فاصله ۲۰۰ کیلومتری از دریای باز مشاهده شد. این مشاهده بسیار نادر است.",
-        "link": "https://polarresearch.net/index.php/polar"
-    }
+    {"title": "عضویت کشورهای جدید در SCAR", "text": "در سی و نهمین نشست دبیران SCAR در اسلو، امارات متحده عربی و کاستاریکا به این کمیته پیوستند.", "link": "https://scar.org/scar-news/scar-delegates-meeting-2026"},
+    {"title": "مشاهده نادر پنگوئن آدلی در عمق خشکی", "text": "یک پنگوئن آدلی در فاصله ۲۰۰ کیلومتری از دریای باز در سرزمین ملکه مود مشاهده شد.", "link": "https://polarresearch.net/index.php/polar"}
 ]
 
 def get_gist_users(filename):
@@ -79,24 +53,79 @@ def get_gist_users(filename):
         return {}
 
 def get_weather_data(lat, lon):
-    """دریافت دما و باد زنده از Open-Meteo"""
     url = "https://api.open-meteo.com/v1/forecast"
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "current": "temperature_2m,wind_speed_10m",
-        "timezone": "UTC",
-    }
+    params = {"latitude": lat, "longitude": lon, "current": "temperature_2m,wind_speed_10m", "timezone": "UTC"}
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         return r.json()
     except Exception as e:
-        print(f"Open-Meteo error for {lat},{lon}:", e)
+        print(f"Open-Meteo error: {e}")
+        return None
+
+def get_kp_index():
+    """دریافت شاخص Kp (شفق قطبی) از NOAA"""
+    try:
+        r = requests.get("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        if len(data) > 1:
+            latest = data[-1]
+            return {"kp": latest[1], "time": latest[0]}
+        return None
+    except Exception as e:
+        print("Kp error:", e)
+        return None
+
+def get_earthquakes():
+    """دریافت زمین‌لرزه‌های اخیر جنوبگان از USGS"""
+    url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
+    params = {
+        "format": "geojson",
+        "minlatitude": -90,
+        "maxlatitude": -60,
+        "minmagnitude": 4.0,
+        "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"),
+        "orderby": "time"
+    }
+    try:
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        quakes = []
+        for f in data["features"][:3]:
+            props = f["properties"]
+            quakes.append({"mag": props["mag"], "place": props["place"]})
+        return quakes
+    except Exception as e:
+        print("USGS error:", e)
+        return []
+
+def get_latest_paper():
+    """دریافت جدیدترین مقاله از CrossRef"""
+    url = "https://api.crossref.org/works"
+    params = {
+        "query": "Antarctica",
+        "filter": "from-pub-date:2026-01-01",
+        "rows": 1,
+        "sort": "published",
+        "order": "desc"
+    }
+    try:
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        if data["message"]["items"]:
+            item = data["message"]["items"][0]
+            title = item.get("title", ["بدون عنوان"])[0]
+            doi = item.get("DOI", "")
+            return {"title": title, "link": f"https://doi.org/{doi}"}
+        return None
+    except Exception as e:
+        print("CrossRef error:", e)
         return None
 
 def get_webcam_image():
-    """دریافت تصویر زنده از دوربین NOAA"""
     image_url = "https://gmd-int.cmdl.noaa.gov/obop/spo/latest.jpg"
     try:
         r = requests.get(image_url, timeout=30)
@@ -107,64 +136,64 @@ def get_webcam_image():
         return None
 
 def build_message():
-    msg = "🧊 **گزارش جنوبگان** 🧊\n\n📅 " + now_jalali() + "\n"
+    msg = "🧊 **گزارش علمی جنوبگان** 🧊\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
     
-    # ۱. دمای ایستگاه‌ها (زنده از Open-Meteo)
+    # ۱. دما و طوفان
     alerts = []
-    msg += "🌡️ **دمای ایستگاه‌های تحقیقاتی (لحظه‌ای):**\n\n"
+    msg += "🌡️ **دمای ایستگاه‌ها (لحظه‌ای):**\n\n"
     for st in ANTARCTICA_STATIONS:
         data = get_weather_data(st["lat"], st["lon"])
         if not data or "current" not in data:
             msg += f"📍 **{st['name']}**: داده در دسترس نیست\n\n"
             continue
-        
-        current = data["current"]
-        temp = current.get("temperature_2m")
-        wind = current.get("wind_speed_10m")
-        
-        msg += f"📍 **{st['name']}**\n"
-        msg += f"   🌡️ دما: {temp}°C\n"
-        msg += f"   💨 باد: {wind} km/h\n"
-        msg += "   ➖➖➖➖➖➖\n"
-        
+        c = data["current"]
+        temp, wind = c.get("temperature_2m"), c.get("wind_speed_10m")
+        msg += f"📍 **{st['name']}**: {temp}°C | باد: {wind} km/h\n"
         if wind and wind > WIND_THRESHOLD:
-            alerts.append({"station": st["name"], "wind": wind, "temp": temp})
-
-    # ۲. هشدار طوفان
+            alerts.append({"station": st["name"], "wind": wind})
+    
     if alerts:
-        msg += "\n🚨 **هشدار طوفان در قطب جنوب!** 🚨\n\n"
-        for a in alerts:
-            msg += f"⚠️ **{a['station']}**: باد با سرعت {a['wind']} km/h\n"
-        msg += "\n━━━━━━━━━━━━━━━\n"
+        msg += "\n🚨 **هشدار طوفان!**\n"
+        for a in alerts: msg += f"⚠️ **{a['station']}**: {a['wind']} km/h\n"
+    
+    # ۲. شفق قطبی (Kp)
+    msg += "\n━━━━━━━━━━━━━━━\n\n"
+    kp = get_kp_index()
+    if kp:
+        msg += f"🌌 **شفق قطبی (Kp):** {kp['kp']} ({kp['time']})\n"
     else:
-        msg += "\n✅ **وضعیت طوفان: عادی** (باد کمتر از ۵۰ km/h)\n"
-        msg += "\n━━━━━━━━━━━━━━━\n"
+        msg += "🌌 **شفق قطبی:** داده در دسترس نیست\n"
 
-    # ۳. اخبار پژوهشی
-    if ANTARCTICA_RESEARCH_NEWS:
-        msg += "\n📰 **اخبار پژوهشی جدید:**\n\n"
-        for news in ANTARCTICA_RESEARCH_NEWS:
-            msg += f"🔹 **{news['title']}**\n"
-            msg += f"   {news['text']}\n"
-            msg += f"   🔗 {news['link']}\n\n"
+    # ۳. زمین‌لرزه‌ها
+    quakes = get_earthquakes()
+    if quakes:
+        msg += "\n🌍 **زمین‌لرزه‌های اخیر (M4+):**\n"
+        for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
 
-    # ۴. اخبار عمومی (حیات وحش و رویدادها)
-    if ANTARCTICA_GENERAL_NEWS:
-        msg += "\n🐾 **اخبار عمومی جنوبگان:**\n\n"
-        for news in ANTARCTICA_GENERAL_NEWS:
-            msg += f"🔹 **{news['title']}**\n"
-            msg += f"   {news['text']}\n"
-            msg += f"   🔗 {news['link']}\n\n"
+    # ۴. مقاله علمی هفته
+    msg += "\n━━━━━━━━━━━━━━━\n\n"
+    paper = get_latest_paper()
+    if paper:
+        msg += f"📄 **مقاله علمی هفته:**\n   {paper['title']}\n   🔗 {paper['link']}\n"
+    else:
+        msg += "📄 **مقاله علمی:** داده در دسترس نیست\n"
+
+    # ۵. اخبار
+    msg += "\n━━━━━━━━━━━━━━━\n\n📰 **اخبار پژوهشی:**\n"
+    for n in ANTARCTICA_RESEARCH_NEWS[:2]:
+        msg += f"🔹 **{n['title']}**\n   {n['text']}\n   🔗 {n['link']}\n\n"
+
+    msg += "\n🐾 **اخبار عمومی:**\n"
+    for n in ANTARCTICA_GENERAL_NEWS[:2]:
+        msg += f"🔹 **{n['title']}**\n   {n['text']}\n   🔗 {n['link']}\n\n"
         
     msg += "━━━━━━━━━━━━━━━\n"
     return msg
 
 async def send_telegram(msg, image_bytes=None):
     users = get_gist_users("antarctica_telegram_users.json")
-    if not users: 
-        print("No Telegram users found.")
-        return
+    if not users: return
     bot = TelegramBot(token=ANTARCTICA_TELEGRAM_TOKEN)
     print("Telegram recipients:", len(users))
     for cid in users.keys():
@@ -179,18 +208,10 @@ async def send_telegram(msg, image_bytes=None):
 
 def send_bale(msg, image_bytes=None):
     users = get_gist_users("antarctica_bale_users.json")
-    if not users: 
-        print("No Bale users found.")
-        return
+    if not users: return
     print("Bale recipients:", len(users))
-    if not ANTARCTICA_BALE_TOKEN: 
-        print("  Bale Failed: Token is None")
-        return
-    
-    bale_msg = msg
-    if image_bytes:
-        bale_msg += "\n📷 [مشاهده تصویر زنده](https://gmd-int.cmdl.noaa.gov/obop/spo/livecamera.html)"
-    
+    if not ANTARCTICA_BALE_TOKEN: return
+    bale_msg = msg + ("\n📷 [مشاهده تصویر زنده](https://gmd-int.cmdl.noaa.gov/obop/spo/livecamera.html)" if image_bytes else "")
     for cid in users.keys():
         url = f"https://tapi.bale.ai/bot{ANTARCTICA_BALE_TOKEN}/sendMessage"
         try:
@@ -203,17 +224,9 @@ def send_bale(msg, image_bytes=None):
 async def main():
     print("=" * 60 + "\nگزارش جنوبگان - " + now_jalali() + "\n" + "=" * 60)
     msg = build_message()
-    
-    print("Fetching webcam image...")
     image_bytes = get_webcam_image()
-    if image_bytes:
-        print("Image fetched successfully.")
-    else:
-        print("Failed to fetch image.")
-
     await send_telegram(msg, image_bytes)
     send_bale(msg, image_bytes)
-    
     print("Done.")
 
 if __name__ == "__main__":
