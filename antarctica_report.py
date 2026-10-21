@@ -5,6 +5,7 @@ import requests
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 from io import BytesIO
+import re
 
 load_dotenv()
 
@@ -27,6 +28,17 @@ ANTARCTICA_STATIONS = [
 ]
 
 WIND_THRESHOLD = 50
+
+# --- اخبار پژوهشی و عمومی ---
+ANTARCTICA_RESEARCH_NEWS = [
+    {"title": "سوراخ لایه اوزون در سال ۲۰۲۶ بزرگ‌تر شد", "text": "سوراخ لایه اوزون بر فراز قطب جنوب در سپتامبر ۲۰۲۶ به حدود ۲۷.۴ میلیون کیلومتر مربع رسید.", "link": "https://www.khabaronline.ir/news/2279751"},
+    {"title": "کاهش بی‌سابقه یخ‌های دریایی (NSIDC/NASA)", "text": "حداکثر وسعت یخ‌های دریایی در سال ۲۰۲۶ به حدود ۱۷.۵۹ میلیون کیلومتر مربع رسید.", "link": "https://nsidc.org/sea-ice-today"},
+]
+
+ANTARCTICA_GENERAL_NEWS = [
+    {"title": "عضویت کشورهای جدید در SCAR", "text": "در سی و نهمین نشست دبیران SCAR در اسلو، امارات متحده عربی و کاستاریکا به این کمیته پیوستند.", "link": "https://scar.org/scar-news/scar-delegates-meeting-2026"},
+    {"title": "مشاهده نادر پنگوئن آدلی در عمق خشکی", "text": "یک پنگوئن آدلی در فاصله ۲۰۰ کیلومتری از دریای باز در سرزمین ملکه مود مشاهده شد.", "link": "https://polarresearch.net/index.php/polar"},
+]
 
 def get_gist_users(filename):
     url = "https://api.github.com/gists/" + str(GIST_ID)
@@ -74,7 +86,13 @@ def get_earthquakes():
 
 def get_latest_paper():
     url = "https://api.crossref.org/works"
-    params = {"query": "Antarctica", "filter": "from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
+    params = {
+        "query": "Antarctica",
+        "filter": "from-pub-date:2026-01-01,type:journal-article",
+        "rows": 1,
+        "sort": "published",
+        "order": "desc"
+    }
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
@@ -83,11 +101,18 @@ def get_latest_paper():
             item = data["message"]["items"][0]
             title = item.get("title", ["بدون عنوان"])[0]
             doi = item.get("DOI", "")
-            abstract = item.get("abstract", "چکیده در دسترس نیست.")
-            abstract = abstract.replace("<jats:p>", "").replace("</jats:p>", "").replace("<jats:title>", "").replace("</jats:title>", "")[:300] + "..."
+            abstract = item.get("abstract", "")
+            if abstract:
+                abstract = re.sub(r'<[^>]+>', '', abstract)
+                abstract = ' '.join(abstract.split())
+                if len(abstract) > 400:
+                    abstract = abstract[:400] + "..."
+            else:
+                abstract = "چکیده در دسترس نیست."
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract}
         return None
     except Exception as e:
+        print("CrossRef error:", e)
         return None
 
 def get_webcam_image():
