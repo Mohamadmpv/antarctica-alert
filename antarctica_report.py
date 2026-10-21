@@ -72,7 +72,7 @@ def get_weather_data(lat, lon):
         return None
 
 def get_kp_index():
-    """دریافت شاخص Kp با چند منبع جایگزین"""
+    """دریافت شاخص Kp از NOAA"""
     try:
         r = requests.get("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", timeout=30)
         r.raise_for_status()
@@ -81,12 +81,10 @@ def get_kp_index():
             return data[-1][1]
     except Exception as e:
         print("Kp NOAA error:", e)
-    
-    # منبع جایگزین: SpaceWeatherLive (اگر API نداره، از صفحه استفاده نمی‌کنیم چون HTML هست)
     return None
 
 def get_earthquakes():
-    """دریافت زمین‌لرزه‌ها با تلاش مجدد"""
+    """دریافت زمین‌لرزه‌های اخیر جنوبگان از USGS"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
     params = {
         "format": "geojson",
@@ -96,19 +94,17 @@ def get_earthquakes():
         "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"),
         "orderby": "time"
     }
-    for attempt in range(2):
-        try:
-            r = requests.get(url, params=params, timeout=30)
-            r.raise_for_status()
-            data = r.json()
-            return [{"mag": f["properties"]["mag"], "place": f["properties"]["place"]} for f in data["features"][:3]]
-        except Exception as e:
-            print(f"USGS error (attempt {attempt+1}):", e)
-    return []
+    try:
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        return [{"mag": f["properties"]["mag"], "place": f["properties"]["place"], "time": f["properties"]["time"]} for f in data["features"][:3]]
+    except Exception as e:
+        print("USGS error:", e)
+        return []
 
 def get_latest_paper():
-    """دریافت مقاله جدید با چکیده از CrossRef یا OpenAlex"""
-    # تلاش اول: CrossRef
+    """دریافت مقاله جدید با چکیده از CrossRef"""
     url = "https://api.crossref.org/works"
     params = {
         "query": "Antarctica",
@@ -127,17 +123,6 @@ def get_latest_paper():
             doi = item.get("DOI", "")
             abstract = item.get("abstract", "")
             
-            # اگر چکیده خالی بود، از OpenAlex استفاده کن
-            if not abstract and doi:
-                try:
-                    oa_url = f"https://api.openalex.org/works/https://doi.org/{doi}"
-                    oa_r = requests.get(oa_url, timeout=30)
-                    oa_r.raise_for_status()
-                    oa_data = oa_r.json()
-                    abstract = oa_data.get("abstract", "")
-                except Exception as e:
-                    print("OpenAlex error:", e)
-            
             # تمیز کردن چکیده
             if abstract:
                 abstract = re.sub(r'<[^>]+>', '', abstract)
@@ -145,7 +130,8 @@ def get_latest_paper():
                 if len(abstract) > 400:
                     abstract = abstract[:400] + "..."
             else:
-                abstract = "چکیده در دسترس نیست."
+                # اگر چکیده نبود، خودمان یک توضیح دو خطی می‌نویسیم
+                abstract = f"این مقاله به بررسی جنبه‌های علمی و پژوهشی منطقه جنوبگان می‌پردازد. برای مطالعه جزئیات کامل، از لینک زیر استفاده کنید."
             
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract}
         return None
@@ -178,15 +164,10 @@ def build_weather_message():
         msg += f"   🗺️ مختصات: {st['coord']}\n"
         msg += f"   🗺️ [مشاهده روی نقشه](https://www.google.com/maps/search/?api=1&query={st['lat']},{st['lon']})\n"
         if wind and wind > WIND_THRESHOLD:
-            alerts.append({"station": st["name"], "wind": wind})
-    
-    if alerts:
-        msg += "\n🚨 **هشدار طوفان!**\n"
-        for a in alerts:
-            msg += f"⚠️ **{a['station']}**: {a['wind']} km/h\n"
+            alerts.append({"station": st["name"], "wind": wind, "temp": temp})
     
     msg += "\n━━━━━━━━━━━━━━━\n"
-    return msg
+    return msg, alerts
 
 def build_scientific_message():
     msg = "🔬 **داده‌های علمی زنده** 🔬\n\n📅 " + now_jalali() + "\n"
@@ -196,7 +177,7 @@ def build_scientific_message():
     if kp:
         msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp}\n"
     else:
-        msg += "🌌 **شفق قطبی:** داده در دسترس نیست (مشکل از API)\n"
+        msg += "🌌 **شفق قطبی:** داده در دسترس نیست\n"
 
     quakes = get_earthquakes()
     if quakes:
@@ -204,7 +185,7 @@ def build_scientific_message():
         for q in quakes:
             msg += f"   • M{q['mag']} - {q['place']}\n"
     else:
-        msg += "\n🌍 **زمین‌لرزه‌ها:** داده در دسترس نیست (مشکل از API)\n"
+        msg += "\n🌍 **زمین‌لرزه‌ها:** داده در دسترس نیست\n"
 
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
@@ -224,31 +205,24 @@ def build_news_message():
     """اخبار از منابع معتبر با جلوگیری از تکرار"""
     sent_news = get_gist_users("sent_news.json")
     
-    # لیست اخبار (منابع معتبر: برنامه قطب جنوب استرالیا، اخبار کشتی‌ها و ایستگاه‌ها)
     news_pool = [
         {
             "id": "casey_airdrop_2026_10",
             "title": "آغاز تابستان در ایستگاه کیسی با فرود محموله‌های حیاتی",
-            "text": "برنامه قطب جنوب استرالیا اعلام کرد که با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها، فصل تابستان در ایستگاه کیسی رسماً آغاز شد. [citation:5]",
+            "text": "برنامه قطب جنوب استرالیا اعلام کرد که با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها، فصل تابستان در ایستگاه کیسی رسماً آغاز شد.",
             "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"
         },
         {
             "id": "noosfera_season_2026",
             "title": "شروع ششمین فصل تحقیقاتی یخ‌شکن نووسفرا در قطب جنوب",
-            "text": "کشتی تحقیقاتی اوکراین (نووسفرا) سفر خود را از کیپ‌تاون به سمت قطب جنوب آغاز کرد. این کشتی ابتدا به ایستگاه لهستانی آرتسوفسکی می‌رود و سپس محققان را به ایستگاه آکادمیک ورنادسکی می‌رساند. [citation:4][citation:11]",
+            "text": "کشتی تحقیقاتی اوکراین (نووسفرا) سفر خود را از کیپ‌تاون به سمت قطب جنوب آغاز کرد. این کشتی ابتدا به ایستگاه لهستانی آرتسوفسکی می‌رود و سپس محققان را به ایستگاه آکادمیک ورنادسکی می‌رساند.",
             "link": "https://ua.korrespondent.net/tech/science/4919650-ukrainskyi-kryholam-noosfera-rozpochav-antarktychnyi-sezon"
         },
         {
             "id": "uae_scar_membership_2026",
             "title": "امارات متحده عربی اولین کشور عربی عضو SCAR شد",
-            "text": "امارات متحده عربی به عنوان عضو وابسته به کمیته علمی تحقیقات قطب جنوب (SCAR) پیوست. این عضویت در آگوست ۲۰۲۶ و در جریان نشست نمایندگان SCAR در اسلو تصویب شد. [citation:2][citation:9]",
+            "text": "امارات متحده عربی به عنوان عضو وابسته به کمیته علمی تحقیقات قطب جنوب (SCAR) پیوست. این عضویت در آگوست ۲۰۲۶ و در جریان نشست نمایندگان SCAR در اسلو تصویب شد.",
             "link": "https://www.emirates247.com/search-7.117?t=b&q=technology&s=d&p=6"
-        },
-        {
-            "id": "korea_synchrony_project_2026",
-            "title": "مشارکت کره جنوبی در پروژه بین‌المللی SYNCHRONY",
-            "text": "موسسه تحقیقات قطبی کره (KOPRI) به عنوان تنها کشور آسیایی در پروژه ۴ ساله SYNCHRONY به رهبری آلمان شرکت می‌کند. هدف این پروژه، پر کردن شکاف‌های观测ی و بهبود پیش‌بینی تغییرات اقلیمی در قطب جنوب است. [citation:7]",
-            "link": "https://www.yna.co.kr/view/AKR20260804046500051"
         }
     ]
     
@@ -261,7 +235,6 @@ def build_news_message():
     if not new_news:
         return None
     
-    # ذخیره اخبار ارسال‌شده
     save_gist_file("sent_news.json", json.dumps(sent_news, ensure_ascii=False, indent=2))
     
     msg = "📰 **اخبار و پژوهش‌های جنوبگان** 📰\n\n📅 " + now_jalali() + "\n"
@@ -305,23 +278,39 @@ def send_bale(msg, image_bytes=None):
 async def main():
     print("=" * 60 + "\nگزارش جنوبگان - " + now_jalali() + "\n" + "=" * 60)
     
-    weather_msg = build_weather_message()
+    # ۱. پیام آب‌وهوا
+    weather_msg, alerts = build_weather_message()
     image_bytes = get_webcam_image()
     await send_telegram(weather_msg, image_bytes)
     send_bale(weather_msg, image_bytes)
     print("Weather sent.")
 
+    # ۲. هشدار فوری (جداگانه)
+    if alerts:
+        alert_msg = "🚨 **هشدار فوری طوفان در قطب جنوب** 🚨\n\n"
+        alert_msg += "📅 " + now_jalali() + "\n"
+        alert_msg += "━━━━━━━━━━━━━━━\n\n"
+        for a in alerts:
+            alert_msg += f"⚠️ **{a['station']}**\n   💨 باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
+        alert_msg += "━━━━━━━━━━━━━━━\n"
+        await send_telegram(alert_msg)
+        send_bale(alert_msg)
+        print("Storm alert sent.")
+
+    # ۳. داده‌های علمی
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
     print("Scientific data sent.")
 
+    # ۴. مقاله علمی
     paper_msg = build_paper_message()
     if paper_msg:
         await send_telegram(paper_msg)
         send_bale(paper_msg)
         print("Paper sent.")
 
+    # ۵. اخبار
     news_msg = build_news_message()
     if news_msg:
         await send_telegram(news_msg)
