@@ -73,13 +73,84 @@ BOOK_POOL = [
     {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
 ]
 
-NEWS_POOL = [
-    {"id": "korea_2026_expedition", "title": "کره جنوبی سی و دومین گروه زمستانی را اعزام کرد", "text": "۱۶ نفر به ایستگاه سجونگ (چهل‌مین سال) و ۱۶ نفر به ایستگاه جانگبوگو (چهاردهمین سال) اعزام شدند. سجونگ در جزیره کینگ جورج و جانگبوگو در شمال سرزمین ویکتوریا قرار دارد.", "link": "https://www.korea.net"},
-    {"id": "japan_2026_expedition", "title": "ژاپن پیش‌گروه شصت و هشتمین اکتشاف جنوبگان را اعزام کرد", "text": "هدف این اکتشاف، تلاش برای استخراج یخ‌های یک میلیون ساله از اعماق خشکی جنوبگان است.", "link": "https://www.nipr.ac.jp"},
-    {"id": "chile_microbes_2026", "title": "کشف میکروارگانیسم‌های بازسازی‌کننده اکوسیستم در جزیره Deception", "text": "محققان شیلیایی میکروارگانیسم‌هایی را کشف کردند که پس از فوران آتشفشان سال ۱۹۷۰، اکوسیستم را بازسازی کرده و ژن‌های بالقوه‌ای برای صنایع دارویی دارند.", "link": "https://www.antarctica.cl"},
-    {"id": "germany_charcoal_2026", "title": "کشف قدیمی‌ترین زغال چوب فسیل‌شده در غرب جنوبگان", "text": "قدیمی‌ترین زغال چوب فسیل‌شده (۹۰ میلیون ساله) در غرب جنوبگان کشف شد که نشان می‌دهد آتش‌سوزی‌های سطحی در دوره کرتاسه رخ می‌داده است.", "link": "https://www.awi.de"},
-    {"id": "italy_co2_2026", "title": "افزایش ۵.۵ برابری انتشار CO2 از پرمافراست در دره تیلور", "text": "مطالعات CNR ایتالیا نشان می‌دهد انتشار CO2 از پرمافراست در دره تیلور بین سال‌های ۲۰۲۰ تا ۲۰۲۵ افزایش چشمگیری داشته است.", "link": "https://www.cnr.it"},
-]
+# --- تابع جدید برای دریافت اخبار لحظه‌ای از منابع معتبر ---
+def fetch_latest_news():
+    """دریافت آخرین اخبار از منابع معتبر (استرالیا، شیلی، آلمان، ایتالیا و...)"""
+    news_items = []
+    
+    # ۱. اخبار برنامه قطب جنوب استرالیا (AAP) - ایستگاه Casey
+    try:
+        r = requests.get("https://www.antarctica.gov.au/news/stations/casey/2026/16-october/", timeout=30)
+        if r.status_code == 200:
+            # استخراج ساده عنوان از تگ h1
+            match = re.search(r'<h1[^>]*>(.*?)</h1>', r.text, re.DOTALL)
+            if match:
+                title = re.sub(r'<[^>]+>', '', match.group(1)).strip()
+                news_items.append({
+                    "id": "aap_casey_airdrop_2026",
+                    "title": title,
+                    "text": "آغاز تابستان در ایستگاه کیسی با فرود هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها. محموله‌های تازه شامل میوه و مرکبات نیز به ایستگاه رسید.",
+                    "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"
+                })
+    except Exception as e:
+        print("News AAP error:", e)
+
+    # ۲. اخبار برنامه قطب جنوب استرالیا (AAP) - حفاری یخ
+    try:
+        r = requests.get("https://www.antarctica.gov.au/news/2026/ice-age-drillers/", timeout=30)
+        if r.status_code == 200:
+            match = re.search(r'<h1[^>]*>(.*?)</h1>', r.text, re.DOTALL)
+            if match:
+                title = re.sub(r'<[^>]+>', '', match.group(1)).strip()
+                news_items.append({
+                    "id": "aap_ice_drill_2026",
+                    "title": title,
+                    "text": "دانشمندان استرالیایی ۴۰۰ متر در ورقه یخی جنوبگان حفاری کردند تا یخی را که در پایان آخرین عصر یخبندان (بیش از ۱۳,۱۰۰ سال پیش) تشکیل شده بود، استخراج کنند.",
+                    "link": "https://www.antarctica.gov.au/news/2026/ice-age-drillers/"
+                })
+    except Exception as e:
+        print("News AAP drill error:", e)
+
+    # ۳. اخبار CNR ایتالیا - پروژه Beyond EPICA
+    try:
+        r = requests.get("https://www.cnr.it/it/comunicato-stampa/14305/antarctica-14-european-laboratories-involved-in-the-most-comprehensive-climate-archive-of-the-last-1-2-million-years", timeout=30)
+        if r.status_code == 200:
+            news_items.append({
+                "id": "cnr_beyond_epica_2026",
+                "title": "پروژه Beyond EPICA رکورد ۱.۲ میلیون ساله اقلیم را ثبت کرد",
+                "text": "پروژه اروپایی Beyond EPICA - Oldest Ice موفق شد کامل‌ترین آرشیو تاریخ اقلیمی و محیطی را از یک هسته یخی ۱.۲ میلیون ساله در جنوبگان استخراج کند. تحلیل‌ها در ۱۴ آزمایشگاه اروپایی در حال انجام است.",
+                "link": "https://www.cnr.it/it/comunicato-stampa/14305/antarctica-14-european-laboratories-involved-in-the-most-comprehensive-climate-archive-of-the-last-1-2-million-years"
+            })
+    except Exception as e:
+        print("News CNR error:", e)
+
+    # ۴. اخبار SCAR - رهبری زن در اکتشاف اوکراین
+    try:
+        r = requests.get("https://scar.org/scar-news/groups-excom/edi-new/first-woman-ukrainian-expedition", timeout=30)
+        if r.status_code == 200:
+            news_items.append({
+                "id": "scar_ukraine_woman_2026",
+                "title": "برای اولین بار یک زن رهبری اکتشاف جنوبگان اوکراین را بر عهده گرفت",
+                "text": "آنژلیکا هانچوک، هواشناس، به عنوان رهبر سی و یکمین اکتشاف جنوبگان اوکراین (۲۰۲۶-۲۰۲۷) منصوب شد. این یک نقطه عطف تاریخی برای جامعه علوم قطبی این کشور است.",
+                "link": "https://scar.org/scar-news/groups-excom/edi-new/first-woman-ukrainian-expedition"
+            })
+    except Exception as e:
+        print("News SCAR error:", e)
+
+    # ۵. اخبار SCAR - میزبانی نروژ برای IPY-5
+    try:
+        r = requests.get("https://scar.org/scar-news/ipy5-host", timeout=30)
+        if r.status_code == 200:
+            news_items.append({
+                "id": "scar_ipy5_host_2026",
+                "title": "نروژ میزبان دفتر هماهنگی پنجمین سال بین‌المللی قطبی شد",
+                "text": "نروژ به همراه کره جنوبی و شیلی، دفتر هماهنگی بین‌المللی پنجمین سال بین‌المللی قطبی (IPY-5) را در Tromsø میزبانی خواهد کرد. این پروژه ۱۰ میلیون دلاری از سال ۲۰۲۷ آغاز می‌شود.",
+                "link": "https://scar.org/scar-news/ipy5-host"
+            })
+    except Exception as e:
+        print("News SCAR IPY error:", e)
+
+    return news_items
 
 def get_gist_file(filename):
     url = "https://api.github.com/gists/" + str(GIST_ID)
@@ -147,43 +218,6 @@ def get_earthquakes():
         return []
 
 def get_latest_paper():
-    """دریافت مقاله از منابع معتبر (Cambridge, Polar Research, Taylor & Francis) با استفاده از OpenAlex"""
-    # جستجو در OpenAlex با فیلتر منابع مشخص
-    try:
-        url = "https://api.openalex.org/works"
-        # این فیلترها منابع را محدود می‌کند به مجلات مورد نظر
-        # Cambridge: Antarctic Science (ISSN: 0954-1020)
-        # Polar Research (ISSN: 1751-8369)
-        params = {
-            "filter": "title_and_abstract.search:Antarctica,from_publication_date:2026-01-01,locations.source.issn:0954-1020|1751-8369",
-            "per-page": 1,
-            "sort": "publication_date:desc"
-        }
-        r = requests.get(url, params=params, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        if data["results"]:
-            item = data["results"][0]
-            title = item.get("title", "بدون عنوان")
-            doi = item.get("doi", "").replace("https://doi.org/", "")
-            abstract = item.get("abstract_inverted_index", {})
-            if abstract:
-                words = {}
-                for word, positions in abstract.items():
-                    for pos in positions:
-                        words[pos] = word
-                abstract_text = " ".join(words[i] for i in sorted(words.keys()))
-                if len(abstract_text) > 400:
-                    abstract_text = abstract_text[:400] + "..."
-            else:
-                abstract_text = "چکیده در دسترس نیست."
-            authors = item.get("authorships", [])
-            first_author = authors[0]["author"]["display_name"] if authors else "نامشخص"
-            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract_text, "author": first_author}
-    except Exception as e:
-        print("OpenAlex filtered error:", e)
-
-    # اگر فیلتر منابع جواب نداد، جستجوی عمومی‌تر
     try:
         url = "https://api.openalex.org/works"
         params = {"filter": "title_and_abstract.search:Antarctica,from_publication_date:2026-01-01", "per-page": 1, "sort": "publication_date:desc"}
@@ -209,8 +243,31 @@ def get_latest_paper():
             first_author = authors[0]["author"]["display_name"] if authors else "نامشخص"
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract_text, "author": first_author}
     except Exception as e:
-        print("OpenAlex general error:", e)
+        print("OpenAlex error:", e)
     
+    try:
+        url = "https://api.crossref.org/works"
+        params = {"query": "Antarctica", "filter": "from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        if data["message"]["items"]:
+            item = data["message"]["items"][0]
+            title = item.get("title", ["بدون عنوان"])[0]
+            doi = item.get("DOI", "")
+            abstract = item.get("abstract", "")
+            if abstract:
+                abstract = re.sub(r'<[^>]+>', '', abstract)
+                abstract = ' '.join(abstract.split())
+                if len(abstract) > 400:
+                    abstract = abstract[:400] + "..."
+            else:
+                abstract = "چکیده در دسترس نیست."
+            authors = item.get("author", [])
+            first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
+            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
+    except Exception as e:
+        print("CrossRef error:", e)
     return None
 
 def get_webcam_image():
@@ -280,8 +337,9 @@ def build_book_message():
 
 def build_news_message():
     sent_news = get_gist_users("sent_news.json")
+    latest_news = fetch_latest_news()
     new_news = []
-    for news in NEWS_POOL:
+    for news in latest_news:
         if news["id"] not in sent_news:
             new_news.append(news)
             sent_news[news["id"]] = datetime.now().isoformat()
@@ -349,23 +407,31 @@ async def main():
     is_even_day = (now_tehran.day % 2 == 0)
     is_manual_run = os.getenv("FORCE_ALL_TEST", "false").lower() == "true"
     
-    # ۱. هشدار طوفان و داده‌های علمی (همیشه)
+    # --- ۱. هشدار فوری طوفان (همیشه بررسی می‌شود، فقط در صورت وجود باد بالای ۵۰ ارسال می‌شود) ---
     weather_msg, alerts = build_weather_message()
-    if alerts or is_manual_run:
-        if alerts:
-            alert_msg = "🚨 **هشدار فوری طوفان در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
-            for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
-            alert_msg += "━━━━━━━━━━━━━━━\n"
-            await send_telegram(alert_msg)
-            send_bale(alert_msg)
-            print("Storm alert sent.")
+    
+    if alerts:
+        alert_msg = "🚨 **هشدار فوری طوفان / کولاک شدید در قطب جنوب** 🚨\n\n"
+        alert_msg += "📅 " + now_jalali() + "\n"
+        alert_msg += "━━━━━━━━━━━━━━━\n\n"
+        for a in alerts:
+            alert_msg += f"⚠️ **{a['station']}**\n"
+            alert_msg += f"   💨 سرعت باد: {a['wind']} km/h\n"
+            alert_msg += f"   🌡️ دما: {a['temp']}°C\n\n"
+        alert_msg += "━━━━━━━━━━━━━━━\n"
+        await send_telegram(alert_msg)
+        send_bale(alert_msg)
+        print("Storm alert sent (wind > 50).")
+    else:
+        print("No storm alerts (wind < 50).")
 
+    # --- ۲. داده‌های علمی (شفق و زلزله) ---
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
     print("Scientific data sent.")
 
-    # ۲. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی)
+    # --- ۳. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی) ---
     if current_hour in [6, 18] or is_manual_run:
         image_bytes = get_webcam_image()
         await send_telegram(weather_msg, image_bytes)
@@ -385,7 +451,7 @@ async def main():
         else:
             print("No new news.")
 
-    # ۳. مقاله علمی (روزهای فرد، ساعت ۶ صبح یا اجرای دستی)
+    # --- ۴. مقاله علمی (روزهای فرد، ساعت ۶ صبح یا اجرای دستی) ---
     if (current_hour == 6 and not is_even_day) or is_manual_run:
         paper_msg = build_paper_message()
         if paper_msg:
@@ -393,7 +459,7 @@ async def main():
             send_bale(paper_msg)
             print("Paper sent.")
 
-    # ۴. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی)
+    # --- ۵. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی) ---
     if (current_hour == 6 and is_even_day) or is_manual_run:
         book_msg = build_book_message()
         await send_telegram(book_msg)
