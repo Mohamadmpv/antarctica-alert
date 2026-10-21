@@ -32,37 +32,37 @@ STATION_PROFILES = [
     {
         "name": "Vostok (روسیه)",
         "coord": "۷۸°۲۸′ جنوبی، ۱۰۶°۴۸′ شرقی (ارتفاع ۳,۴۸۸ متر)",
-        "history": "این ایستگاه در ۱۶ دسامبر ۱۹۵۷ برای برنامه Международного геофизического года (IGY) تأسیس شد. نام آن از کشتی بادبانی «وستوک» گرفته شده که در سفر اکتشافی ۱۸۱۹-۱۸۲۱ روسیه به جنوبگان شرکت داشت. تا سال ۲۰۱۷، ۶۱ اکیپ زمستانی با مجموع ۱,۳۸۶ نفر در آن کار کرده‌اند .",
+        "history": "این ایستگاه در ۱۶ دسامبر ۱۹۵۷ برای برنامه Международного геофизического года (IGY) تأسیس شد. نام آن از کشتی بادبانی «وستوک» گرفته شده که در سفر اکتشافی ۱۸۱۹-۱۸۲۱ روسیه به جنوبگان شرکت داشت. تا سال ۲۰۱۷، ۶۱ اکیپ زمستانی با مجموع ۱,۳۸۶ نفر در آن کار کرده‌اند.",
         "ship": "پشتیبانی از این ایستگاه از طریق هواپیماهای مجهز به اسکی و کاروان‌های زمینی از ایستگاه Mirny انجام می‌شود. کشتی اختصاصی برای این ایستگاه وجود ندارد، اما کشتی‌های تحقیقاتی روسیه مانند *Akademik Fedorov* در فصول تابستان در سواحل جنوبگان حضور دارند.",
-        "activity": "تحقیقات اصلی شامل یخ‌شناسی (استخراج هسته یخی ۴۲۰,۰۰۰ ساله)، مشاهدات شفق قطبی (از دهه ۱۹۵۰)، میدان مغناطیسی زمین، و فیزیولوژی انسانی در شرایط سخت است ."
+        "activity": "تحقیقات اصلی شامل یخ‌شناسی (استخراج هسته یخی ۴۲۰,۰۰۰ ساله)، مشاهدات شفق قطبی (از دهه ۱۹۵۰)، میدان مغناطیسی زمین، و فیزیولوژی انسانی در شرایط سخت است."
     },
     {
         "name": "Amundsen-Scott (آمریکا)",
         "coord": "۹۰° جنوبی (قطب جنوب جغرافیایی، ارتفاع ۲,۹۰۰ متر)",
-        "history": "این ایستگاه در سال ۱۹۵۶ برای IGY ساخته شد و از آن زمان به طور مداوم فعال بوده است. نام آن از «روآلد آموندسن» و «رابرت اسکات» گرفته شده که اولین کاوشگران قطب جنوب بودند. ساختار فعلی (سومین ساختمان) در سال ۲۰۰۸ تکمیل شد .",
-        "ship": "پشتیبانی لجستیکی عمدتاً توسط هواپیماهای LC-130 (اسکی‌دار) از ایستگاه McMurdo انجام می‌شود. کشتی‌های باری *American Tern* و تانکر *Paul Buck* در فصول تابستان به McMurdo تدارکات می‌رسانند، اما دسترسی به خود قطب جنوب فقط از طریق هوا است .",
-        "activity": "تحقیقات در زمینه نجوم (رصدخانه نوترینو IceCube)، فیزیک جو، لرزه‌شناسی، و مطالعه تغییرات اقلیمی از طریق حبس هوا در یخ. همچنین به عنوان نقطه مرجع برای کالیبراسیون ماهواره‌ها استفاده می‌شود ."
+        "history": "این ایستگاه در سال ۱۹۵۶ برای IGY ساخته شد و از آن زمان به طور مداوم فعال بوده است. نام آن از «روآلد آموندسن» و «رابرت اسکات» گرفته شده که اولین کاوشگران قطب جنوب بودند. ساختار فعلی (سومین ساختمان) در سال ۲۰۰۸ تکمیل شد.",
+        "ship": "پشتیبانی لجستیکی عمدتاً توسط هواپیماهای LC-130 (اسکی‌دار) از ایستگاه McMurdo انجام می‌شود. کشتی‌های باری *American Tern* و تانکر *Paul Buck* در فصول تابستان به McMurdo تدارکات می‌رسانند، اما دسترسی به خود قطب جنوب فقط از طریق هوا است.",
+        "activity": "تحقیقات در زمینه نجوم (رصدخانه نوترینو IceCube)، فیزیک جو، لرزه‌شناسی، و مطالعه تغییرات اقلیمی از طریق حبس هوا در یخ. همچنین به عنوان نقطه مرجع برای کالیبراسیون ماهواره‌ها استفاده می‌شود."
     },
     {
         "name": "Maitri (هند)",
         "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی (واحه Schirmacher، ارتفاع ۱۱۷ متر)",
-        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد و جایگزین ایستگاه Dakshin Gangotri (۱۹۸۳-۱۹۸۹) شد. این یک ایستگاه داخلی است که حدود ۱۰۰ کیلومتر از ساحل فاصله دارد و ظرفیت ۶۵ نفر در تابستان و ۲۵ نفر در زمستان را دارد .",
-        "ship": "دسترسی به این ایستگاه از طریق دریا بین نوامبر و مارس از کیپ‌تاون با کشتی‌های تحقیقاتی هند انجام می‌شود. همچنین پروازهای چارتر از کیپ‌تاون به باند فرودگاه Novo (DROMLAN) و سپس انتقال زمینی به Maitri امکان‌پذیر است .",
-        "activity": "تحقیقات در زمینه علوم جوی (رادار MARA برای مطالعه تلاطم و امواج)، علوم زمین و یخ‌شناسی، زیست‌شناسی، و فیزیولوژی انسانی. این ایستگاه به عنوان پایگاهی برای نقشه‌برداری زمین‌شناسی از رشته‌کوه‌های Wohlthat و Orvin استفاده می‌شود ."
+        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد و جایگزین ایستگاه Dakshin Gangotri (۱۹۸۳-۱۹۸۹) شد. این یک ایستگاه داخلی است که حدود ۱۰۰ کیلومتر از ساحل فاصله دارد و ظرفیت ۶۵ نفر در تابستان و ۲۵ نفر در زمستان را دارد.",
+        "ship": "دسترسی به این ایستگاه از طریق دریا بین نوامبر و مارس از کیپ‌تاون با کشتی‌های تحقیقاتی هند انجام می‌شود. همچنین پروازهای چارتر از کیپ‌تاون به باند فرودگاه Novo (DROMLAN) و سپس انتقال زمینی به Maitri امکان‌پذیر است.",
+        "activity": "تحقیقات در زمینه علوم جوی (رادار MARA برای مطالعه تلاطم و امواج)، علوم زمین و یخ‌شناسی، زیست‌شناسی، و فیزیولوژی انسانی. این ایستگاه به عنوان پایگاهی برای نقشه‌برداری زمین‌شناسی از رشته‌کوه‌های Wohlthat و Orvin استفاده می‌شود."
     },
     {
         "name": "Zhongshan (چین)",
         "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی (خلیج Prydz)",
-        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد. در سال ۲۰۲۴، همزمان با چهلمین سالگرد سفرهای قطبی چین، «ایستگاه پس‌زمینه جوی ژونگشان» به طور رسمی افتتاح شد تا به عنوان نهمین ایستگاه پس‌زمینه جوی چین فعالیت کند .",
+        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد. در سال ۲۰۲۴، همزمان با چهلمین سالگرد سفرهای قطبی چین، «ایستگاه پس‌زمینه جوی ژونگشان» به طور رسمی افتتاح شد تا به عنوان نهمین ایستگاه پس‌زمینه جوی چین فعالیت کند.",
         "ship": "پشتیبانی توسط یخ‌شکن *Xuelong* (اژدهای برفی) چین انجام می‌شود که هر ساله در فصل تابستان جنوبگان (نوامبر تا مارس) تدارکات و پرسنل را جابجا می‌کند.",
-        "activity": "مشاهدات طولانی‌مدت ترکیبات جوی (ازن، گازهای گلخانه‌ای مثل CO2 و متان)، مطالعه تغییرات اقلیمی، و تحقیقات زیست‌شناسی دریایی. داده‌های این ایستگاه در بولتن ازن جنوبگان WMO و گزارش‌های اقلیمی چین استفاده می‌شود ."
+        "activity": "مشاهدات طولانی‌مدت ترکیبات جوی (ازن، گازهای گلخانه‌ای مثل CO2 و متان)، مطالعه تغییرات اقلیمی، و تحقیقات زیست‌شناسی دریایی. داده‌های این ایستگاه در بولتن ازن جنوبگان WMO و گزارش‌های اقلیمی چین استفاده می‌شود."
     },
     {
         "name": "Esperanza (آرژانتین)",
         "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی (شبه‌جزیره جنوبگان)",
-        "history": "این ایستگاه از ۷ دسامبر ۱۹۵۲ به طور دائم فعال است. این تنها ایستگاه در جنوبگان است که خانواده‌ها (با کودکان) در آن زندگی می‌کنند و یک مدرسه دارد. در سال ۲۰۲۵، ۵۸ نفر (شامل نظامیان و خانواده‌ها) در آن حضور داشتند .",
+        "history": "این ایستگاه از ۷ دسامبر ۱۹۵۲ به طور دائم فعال است. این تنها ایستگاه در جنوبگان است که خانواده‌ها (با کودکان) در آن زندگی می‌کنند و یک مدرسه دارد. در سال ۲۰۲۵، ۵۸ نفر (شامل نظامیان و خانواده‌ها) در آن حضور داشتند.",
         "ship": "دسترسی از طریق کشتی‌های نیروی دریایی آرژانتین و همچنین پروازهای نظامی از فرودگاه Ushuaia (آرژانتین) به باند فرودگاه Marambio و سپس هلی‌کوپتر به Esperanza انجام می‌شود.",
-        "activity": "تحقیقات در زیست‌شناسی، زمین‌شناسی (لرزه‌نگار)، اقیانوس‌شناسی (جزر و مدسنج)، هواشناسی و محیط زیست. این ایستگاه به عنوان پایگاه پشتیبانی برای اکتشافات میدانی در شبه‌جزیره جنوبگان عمل می‌کند ."
+        "activity": "تحقیقات در زیست‌شناسی، زمین‌شناسی (لرزه‌نگار)، اقیانوس‌شناسی (جزر و مدسنج)، هواشناسی و محیط زیست. این ایستگاه به عنوان پایگاه پشتیبانی برای اکتشافات میدانی در شبه‌جزیره جنوبگان عمل می‌کند."
     },
 ]
 
@@ -72,85 +72,6 @@ BOOK_POOL = [
     {"title": "Antarctic Materialities", "author": "Various Authors", "year": "2026", "desc": "کتابی دانشگاهی درباره تاریخ، سیاست و ماده‌مندی جنوبگان.", "link": "https://www.berghahnbooks.com"},
     {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
 ]
-
-# --- تابع جدید برای دریافت اخبار لحظه‌ای از منابع معتبر ---
-def fetch_latest_news():
-    """دریافت آخرین اخبار از منابع معتبر (استرالیا، شیلی، آلمان، ایتالیا و...)"""
-    news_items = []
-    
-    # ۱. اخبار برنامه قطب جنوب استرالیا (AAP) - ایستگاه Casey
-    try:
-        r = requests.get("https://www.antarctica.gov.au/news/stations/casey/2026/16-october/", timeout=30)
-        if r.status_code == 200:
-            # استخراج ساده عنوان از تگ h1
-            match = re.search(r'<h1[^>]*>(.*?)</h1>', r.text, re.DOTALL)
-            if match:
-                title = re.sub(r'<[^>]+>', '', match.group(1)).strip()
-                news_items.append({
-                    "id": "aap_casey_airdrop_2026",
-                    "title": title,
-                    "text": "آغاز تابستان در ایستگاه کیسی با فرود هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها. محموله‌های تازه شامل میوه و مرکبات نیز به ایستگاه رسید.",
-                    "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"
-                })
-    except Exception as e:
-        print("News AAP error:", e)
-
-    # ۲. اخبار برنامه قطب جنوب استرالیا (AAP) - حفاری یخ
-    try:
-        r = requests.get("https://www.antarctica.gov.au/news/2026/ice-age-drillers/", timeout=30)
-        if r.status_code == 200:
-            match = re.search(r'<h1[^>]*>(.*?)</h1>', r.text, re.DOTALL)
-            if match:
-                title = re.sub(r'<[^>]+>', '', match.group(1)).strip()
-                news_items.append({
-                    "id": "aap_ice_drill_2026",
-                    "title": title,
-                    "text": "دانشمندان استرالیایی ۴۰۰ متر در ورقه یخی جنوبگان حفاری کردند تا یخی را که در پایان آخرین عصر یخبندان (بیش از ۱۳,۱۰۰ سال پیش) تشکیل شده بود، استخراج کنند.",
-                    "link": "https://www.antarctica.gov.au/news/2026/ice-age-drillers/"
-                })
-    except Exception as e:
-        print("News AAP drill error:", e)
-
-    # ۳. اخبار CNR ایتالیا - پروژه Beyond EPICA
-    try:
-        r = requests.get("https://www.cnr.it/it/comunicato-stampa/14305/antarctica-14-european-laboratories-involved-in-the-most-comprehensive-climate-archive-of-the-last-1-2-million-years", timeout=30)
-        if r.status_code == 200:
-            news_items.append({
-                "id": "cnr_beyond_epica_2026",
-                "title": "پروژه Beyond EPICA رکورد ۱.۲ میلیون ساله اقلیم را ثبت کرد",
-                "text": "پروژه اروپایی Beyond EPICA - Oldest Ice موفق شد کامل‌ترین آرشیو تاریخ اقلیمی و محیطی را از یک هسته یخی ۱.۲ میلیون ساله در جنوبگان استخراج کند. تحلیل‌ها در ۱۴ آزمایشگاه اروپایی در حال انجام است.",
-                "link": "https://www.cnr.it/it/comunicato-stampa/14305/antarctica-14-european-laboratories-involved-in-the-most-comprehensive-climate-archive-of-the-last-1-2-million-years"
-            })
-    except Exception as e:
-        print("News CNR error:", e)
-
-    # ۴. اخبار SCAR - رهبری زن در اکتشاف اوکراین
-    try:
-        r = requests.get("https://scar.org/scar-news/groups-excom/edi-new/first-woman-ukrainian-expedition", timeout=30)
-        if r.status_code == 200:
-            news_items.append({
-                "id": "scar_ukraine_woman_2026",
-                "title": "برای اولین بار یک زن رهبری اکتشاف جنوبگان اوکراین را بر عهده گرفت",
-                "text": "آنژلیکا هانچوک، هواشناس، به عنوان رهبر سی و یکمین اکتشاف جنوبگان اوکراین (۲۰۲۶-۲۰۲۷) منصوب شد. این یک نقطه عطف تاریخی برای جامعه علوم قطبی این کشور است.",
-                "link": "https://scar.org/scar-news/groups-excom/edi-new/first-woman-ukrainian-expedition"
-            })
-    except Exception as e:
-        print("News SCAR error:", e)
-
-    # ۵. اخبار SCAR - میزبانی نروژ برای IPY-5
-    try:
-        r = requests.get("https://scar.org/scar-news/ipy5-host", timeout=30)
-        if r.status_code == 200:
-            news_items.append({
-                "id": "scar_ipy5_host_2026",
-                "title": "نروژ میزبان دفتر هماهنگی پنجمین سال بین‌المللی قطبی شد",
-                "text": "نروژ به همراه کره جنوبی و شیلی، دفتر هماهنگی بین‌المللی پنجمین سال بین‌المللی قطبی (IPY-5) را در Tromsø میزبانی خواهد کرد. این پروژه ۱۰ میلیون دلاری از سال ۲۰۲۷ آغاز می‌شود.",
-                "link": "https://scar.org/scar-news/ipy5-host"
-            })
-    except Exception as e:
-        print("News SCAR IPY error:", e)
-
-    return news_items
 
 def get_gist_file(filename):
     url = "https://api.github.com/gists/" + str(GIST_ID)
@@ -218,36 +139,16 @@ def get_earthquakes():
         return []
 
 def get_latest_paper():
-    try:
-        url = "https://api.openalex.org/works"
-        params = {"filter": "title_and_abstract.search:Antarctica,from_publication_date:2026-01-01", "per-page": 1, "sort": "publication_date:desc"}
-        r = requests.get(url, params=params, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        if data["results"]:
-            item = data["results"][0]
-            title = item.get("title", "بدون عنوان")
-            doi = item.get("doi", "").replace("https://doi.org/", "")
-            abstract = item.get("abstract_inverted_index", {})
-            if abstract:
-                words = {}
-                for word, positions in abstract.items():
-                    for pos in positions:
-                        words[pos] = word
-                abstract_text = " ".join(words[i] for i in sorted(words.keys()))
-                if len(abstract_text) > 400:
-                    abstract_text = abstract_text[:400] + "..."
-            else:
-                abstract_text = "چکیده در دسترس نیست."
-            authors = item.get("authorships", [])
-            first_author = authors[0]["author"]["display_name"] if authors else "نامشخص"
-            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract_text, "author": first_author}
-    except Exception as e:
-        print("OpenAlex error:", e)
-    
+    """دریافت مقاله از Cambridge (Antarctic Science) با استفاده از Crossref برای چکیده"""
+    # جستجو در Crossref با فیلتر ISSN مجله Antarctic Science
     try:
         url = "https://api.crossref.org/works"
-        params = {"query": "Antarctica", "filter": "from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
+        params = {
+            "filter": "issn:0954-1020,from-pub-date:2026-01-01,type:journal-article",
+            "rows": 1,
+            "sort": "published",
+            "order": "desc"
+        }
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
@@ -267,7 +168,38 @@ def get_latest_paper():
             first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
     except Exception as e:
-        print("CrossRef error:", e)
+        print("Crossref Cambridge error:", e)
+
+    # اگر Cambridge جواب نداد، از Polar Research استفاده کن
+    try:
+        url = "https://api.crossref.org/works"
+        params = {
+            "filter": "issn:1751-8369,from-pub-date:2026-01-01,type:journal-article",
+            "rows": 1,
+            "sort": "published",
+            "order": "desc"
+        }
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        if data["message"]["items"]:
+            item = data["message"]["items"][0]
+            title = item.get("title", ["بدون عنوان"])[0]
+            doi = item.get("DOI", "")
+            abstract = item.get("abstract", "")
+            if abstract:
+                abstract = re.sub(r'<[^>]+>', '', abstract)
+                abstract = ' '.join(abstract.split())
+                if len(abstract) > 400:
+                    abstract = abstract[:400] + "..."
+            else:
+                abstract = "چکیده در دسترس نیست."
+            authors = item.get("author", [])
+            first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
+            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
+    except Exception as e:
+        print("Crossref Polar Research error:", e)
+
     return None
 
 def get_webcam_image():
@@ -337,9 +269,13 @@ def build_book_message():
 
 def build_news_message():
     sent_news = get_gist_users("sent_news.json")
-    latest_news = fetch_latest_news()
+    # لیست اخبار ثابت (برای تست)
+    news_pool = [
+        {"id": "aap_casey_airdrop_2026", "title": "آغاز تابستان در ایستگاه کیسی با فرود C-17", "text": "فصل تابستان در ایستگاه کیسی با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها آغاز شد.", "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"},
+        {"id": "aap_ice_drill_2026", "title": "حفاری ۴۰۰ متری دانشمندان استرالیایی", "text": "دانشمندان استرالیایی ۴۰۰ متر در ورقه یخی جنوبگان حفاری کردند تا یخی را که در پایان آخرین عصر یخبندان تشکیل شده بود، استخراج کنند.", "link": "https://www.antarctica.gov.au/news/2026/ice-age-drillers/"}
+    ]
     new_news = []
-    for news in latest_news:
+    for news in news_pool:
         if news["id"] not in sent_news:
             new_news.append(news)
             sent_news[news["id"]] = datetime.now().isoformat()
@@ -407,7 +343,7 @@ async def main():
     is_even_day = (now_tehran.day % 2 == 0)
     is_manual_run = os.getenv("FORCE_ALL_TEST", "false").lower() == "true"
     
-    # --- ۱. هشدار فوری طوفان (همیشه بررسی می‌شود، فقط در صورت وجود باد بالای ۵۰ ارسال می‌شود) ---
+    # ۱. هشدار طوفان (همیشه بررسی می‌شود)
     weather_msg, alerts = build_weather_message()
     
     if alerts:
@@ -415,23 +351,31 @@ async def main():
         alert_msg += "📅 " + now_jalali() + "\n"
         alert_msg += "━━━━━━━━━━━━━━━\n\n"
         for a in alerts:
-            alert_msg += f"⚠️ **{a['station']}**\n"
-            alert_msg += f"   💨 سرعت باد: {a['wind']} km/h\n"
-            alert_msg += f"   🌡️ دما: {a['temp']}°C\n\n"
+            alert_msg += f"⚠️ **{a['station']}**\n   💨 سرعت باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
         alert_msg += "━━━━━━━━━━━━━━━\n"
         await send_telegram(alert_msg)
         send_bale(alert_msg)
-        print("Storm alert sent (wind > 50).")
+        print("Storm alert sent.")
+    elif is_manual_run:
+        # در حالت تست دستی، اگر طوفان نبود، یک پیام وضعیت عادی بفرست
+        normal_msg = "✅ **وضعیت طوفان: عادی**\n\n"
+        normal_msg += "📅 " + now_jalali() + "\n"
+        normal_msg += "━━━━━━━━━━━━━━━\n\n"
+        normal_msg += "در حال حاضر باد در هیچ‌یک از ایستگاه‌های جنوبگان از آستانه ۵۰ کیلومتر بر ساعت عبور نکرده است.\n"
+        normal_msg += "\n━━━━━━━━━━━━━━━\n"
+        await send_telegram(normal_msg)
+        send_bale(normal_msg)
+        print("Normal weather status sent (manual run).")
     else:
         print("No storm alerts (wind < 50).")
 
-    # --- ۲. داده‌های علمی (شفق و زلزله) ---
+    # ۲. داده‌های علمی (شفق و زلزله)
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
     print("Scientific data sent.")
 
-    # --- ۳. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی) ---
+    # ۳. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی)
     if current_hour in [6, 18] or is_manual_run:
         image_bytes = get_webcam_image()
         await send_telegram(weather_msg, image_bytes)
@@ -451,7 +395,7 @@ async def main():
         else:
             print("No new news.")
 
-    # --- ۴. مقاله علمی (روزهای فرد، ساعت ۶ صبح یا اجرای دستی) ---
+    # ۴. مقاله علمی (روزهای فرد، ساعت ۶ صبح یا اجرای دستی)
     if (current_hour == 6 and not is_even_day) or is_manual_run:
         paper_msg = build_paper_message()
         if paper_msg:
@@ -459,7 +403,7 @@ async def main():
             send_bale(paper_msg)
             print("Paper sent.")
 
-    # --- ۵. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی) ---
+    # ۵. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی)
     if (current_hour == 6 and is_even_day) or is_manual_run:
         book_msg = build_book_message()
         await send_telegram(book_msg)
