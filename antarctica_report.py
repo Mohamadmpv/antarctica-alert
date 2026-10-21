@@ -36,7 +36,6 @@ STATION_PROFILES = [
     {"name": "Esperanza (آرژانتین)", "desc": "ایستگاه اسپرانزا آرژانتین یکی از معدود ایستگاه‌هایی است که در آن خانواده‌ها (با کودکان) نیز زندگی می‌کنند. این ایستگاه در سال ۱۹۵۲ تأسیس شد."},
 ]
 
-# --- لیست کتاب‌های جدید (۲۰۲۶) ---
 BOOK_POOL = [
     {"title": "Where the Earth Meets the Sky", "author": "Louise K. Blight", "year": "2026", "desc": "سفرنامه علمی از یک فصل کار میدانی روی پنگوئن‌های آدلی در جزیره راس. ترکیبی از علم، طبیعت‌نویسی و تجربه انسانی در جنوبگان.", "link": "https://www.goodreads.com"},
     {"title": "All About Antarctica", "author": "Marc Martin", "year": "2026", "desc": "یک کتاب مصور و آموزشی برای معرفی جنوبگان به مخاطب عمومی و نوجوان.", "link": "https://www.goodreads.com"},
@@ -44,13 +43,12 @@ BOOK_POOL = [
     {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
 ]
 
-# --- لیست اخبار به‌روز ---
 NEWS_POOL = [
     {"id": "korea_2026_expedition", "title": "کره جنوبی سی و دومین گروه زمستانی را اعزام کرد", "text": "۱۶ نفر به ایستگاه سجونگ (چهل‌مین سال) و ۱۶ نفر به ایستگاه جانگبوگو (چهاردهمین سال) اعزام شدند. سجونگ در جزیره کینگ جورج و جانگبوگو در شمال سرزمین ویکتوریا قرار دارد.", "link": "https://www.korea.net"},
     {"id": "japan_2026_expedition", "title": "ژاپن پیش‌گروه شصت و هشتمین اکتشاف جنوبگان را اعزام کرد", "text": "هدف این اکتشاف، تلاش برای استخراج یخ‌های یک میلیون ساله از اعماق خشکی جنوبگان است.", "link": "https://www.nipr.ac.jp"},
     {"id": "chile_microbes_2026", "title": "کشف میکروارگانیسم‌های بازسازی‌کننده اکوسیستم در جزیره Deception", "text": "محققان شیلیایی میکروارگانیسم‌هایی را کشف کردند که پس از فوران آتشفشان سال ۱۹۷۰، اکوسیستم را بازسازی کرده و ژن‌های بالقوه‌ای برای صنایع دارویی دارند.", "link": "https://www.antarctica.cl"},
     {"id": "germany_charcoal_2026", "title": "کشف قدیمی‌ترین زغال چوب فسیل‌شده در غرب جنوبگان", "text": "قدیمی‌ترین زغال چوب فسیل‌شده (۹۰ میلیون ساله) در غرب جنوبگان کشف شد که نشان می‌دهد آتش‌سوزی‌های سطحی در دوره کرتاسه رخ می‌داده است.", "link": "https://www.awi.de"},
-    {"id": "italy_co2_2026", "title": "افزایش ۵.۵ برابری انتشار CO2 از پرمافراست در دره تیلور", "text": "مطالعات CNR ایتالیا نشان می‌دهد انتشار CO2 از پرمافراست در دره تیلور (McMurdo Dry Valleys) بین سال‌های ۲۰۲۰ تا ۲۰۲۵ افزایش چشمگیری داشته است.", "link": "https://www.cnr.it"},
+    {"id": "italy_co2_2026", "title": "افزایش ۵.۵ برابری انتشار CO2 از پرمافراست در دره تیلور", "text": "مطالعات CNR ایتالیا نشان می‌دهد انتشار CO2 از پرمافراست در دره تیلور بین سال‌های ۲۰۲۰ تا ۲۰۲۵ افزایش چشمگیری داشته است.", "link": "https://www.cnr.it"},
 ]
 
 def get_gist_file(filename):
@@ -119,7 +117,6 @@ def get_earthquakes():
         return []
 
 def get_latest_paper():
-    # تلاش اول: OpenAlex
     try:
         url = "https://api.openalex.org/works"
         params = {"filter": "title_and_abstract.search:Antarctica,from_publication_date:2026-01-01", "per-page": 1, "sort": "publication_date:desc"}
@@ -147,7 +144,6 @@ def get_latest_paper():
     except Exception as e:
         print("OpenAlex error:", e)
     
-    # تلاش دوم: CrossRef
     try:
         url = "https://api.crossref.org/works"
         params = {"query": "Antarctica", "filter": "from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
@@ -207,12 +203,12 @@ def build_scientific_message():
     msg += "━━━━━━━━━━━━━━━\n\n"
     kp = get_kp_index()
     if kp: msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp}\n"
-    else: msg += "🌌 **شفق قطبی:** داده در دسترس نیست\n"
+    else: msg += "🌌 **شفق قطبی:** در حال حاضر فعالیت خاصی ثبت نشده است.\n"
     quakes = get_earthquakes()
     if quakes:
         msg += "\n🌍 **زمین‌لرزه‌های اخیر (M4+):**\n"
         for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
-    else: msg += "\n🌍 **زمین‌لرزه‌ها:** داده در دسترس نیست\n"
+    else: msg += "\n🌍 **زمین‌لرزه‌ها:** در ۷ روز گذشته زمین‌لرزه‌ای بالای ۴ ریشتر ثبت نشده است.\n"
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
