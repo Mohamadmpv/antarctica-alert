@@ -95,7 +95,7 @@ def get_kp_index():
 
 def get_earthquakes():
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    params = {"format": "geojson", "minlatitude": -90, "maxlatitude": -60, "minmagnitude": 4.0, "starttime": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"), "orderby": "time"}
+    params = {"format": "geojson", "minlatitude": -90, "maxlatitude": -60, "minmagnitude": 4.0, "starttime": (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"), "orderby": "time"}
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
@@ -186,16 +186,25 @@ def build_weather_message():
     return msg, alerts
 
 def build_scientific_message():
+    kp = get_kp_index()
+    quakes = get_earthquakes()
+    
+    # اگر نه شفق قوی بود و نه زلزله، پیام نده
+    if (kp is None or float(kp) < 5) and not quakes:
+        return None
+        
     msg = "🔬 **داده‌های علمی زنده** 🔬\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
-    kp = get_kp_index()
-    if kp: msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp}\n"
-    else: msg += "🌌 **شفق قطبی:** در حال حاضر فعالیت خاصی ثبت نشده است.\n"
-    quakes = get_earthquakes()
+    
+    if kp and float(kp) >= 5:
+        msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp} (فعال!)\n"
+    
     if quakes:
-        msg += "\n🌍 **زمین‌لرزه‌های اخیر (M4+):**\n"
+        msg += "\n🌍 **زمین‌لرزه‌های ۲۴ ساعت گذشته (M4+):**\n"
         for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
-    else: msg += "\n🌍 **زمین‌لرزه‌ها:** در ۷ روز گذشته زمین‌لرزه‌ای بالای ۴ ریشتر ثبت نشده است.\n"
+    else:
+        msg += "\n🌍 **زمین‌لرزه‌ها:** در ۲۴ ساعت گذشته زمین‌لرزه‌ای بالای ۴ ریشتر ثبت نشده است.\n"
+        
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
@@ -344,11 +353,14 @@ async def main():
         send_bale(normal_msg)
         print("Normal weather status sent (manual run).")
 
-    # ۲. داده‌های علمی (همیشه)
+    # ۲. داده‌های علمی (فقط اگر خبری باشد)
     sci_msg = build_scientific_message()
-    await send_telegram(sci_msg)
-    send_bale(sci_msg)
-    print("Scientific data sent.")
+    if sci_msg:
+        await send_telegram(sci_msg)
+        send_bale(sci_msg)
+        print("Scientific data sent (activity detected).")
+    else:
+        print("No scientific activity (Kp < 5 and no earthquakes).")
 
     # ۳. آب‌وهوا، فعالیت‌ها و اخبار (ساعت ۶ و ۱۸ یا اجرای دستی)
     if current_hour in [6, 18] or is_manual_run:
