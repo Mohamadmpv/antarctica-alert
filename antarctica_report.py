@@ -20,57 +20,24 @@ GH_PAT = os.getenv("GH_PAT")
 WIND_THRESHOLD = 50
 
 ANTARCTICA_STATIONS = [
-    {"name": "Vostok (روسیه)", "lat": -78.4645, "lon": 106.8317, "coord": "۷۸°۲۷′ جنوبی، ۱۰۶°۵۰′ شرقی"},
-    {"name": "Amundsen-Scott (آمریکا)", "lat": -90.0, "lon": 0.0, "coord": "۹۰° جنوبی"},
+    {"name": "Vostok (روسیه)", "lat": -78.4645, "lon": 106.8317, "coord": "۷۸°۲۸′ جنوبی، ۱۰۶°۴۸′ شرقی (ارتفاع ۳,۴۸۸ متر)"},
+    {"name": "Amundsen-Scott (آمریکا)", "lat": -90.0, "lon": 0.0, "coord": "۹۰° جنوبی (قطب جنوب جغرافیایی، ارتفاع ۲,۹۰۰ متر)"},
     {"name": "Novolazarevskaya (روسیه)", "lat": -70.7667, "lon": 11.8333, "coord": "۷۰°۴۶′ جنوبی، ۱۱°۵۰′ شرقی"},
-    {"name": "Maitri (هند)", "lat": -70.7500, "lon": 11.7167, "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی"},
-    {"name": "Zhongshan (چین)", "lat": -69.3667, "lon": 76.3667, "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی"},
-    {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833, "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی"},
+    {"name": "Maitri (هند)", "lat": -70.7500, "lon": 11.7167, "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی (واحه Schirmacher، ارتفاع ۱۱۷ متر)"},
+    {"name": "Zhongshan (چین)", "lat": -69.3667, "lon": 76.3667, "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی (خلیج Prydz)"},
+    {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833, "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی (شبه‌جزیره جنوبگان)"},
+    {"name": "Casey (استرالیا)", "lat": -66.2833, "lon": 110.5167, "coord": "۶۶°۱۷′ جنوبی، ۱۱۰°۳۱′ شرقی (خلیج Vincennes)"},
+    {"name": "Davis (استرالیا)", "lat": -68.5764, "lon": 77.9694, "coord": "۶۸°۳۴′ جنوبی، ۷۷°۵۸′ شرقی (سرزمین پرنسس الیزابت)"},
+    {"name": "Mawson (استرالیا)", "lat": -67.6028, "lon": 62.8731, "coord": "۶۷°۳۶′ جنوبی، ۶۲°۵۲′ شرقی (سرزمین Mac Robertson)"},
+    {"name": "Rothera (بریتانیا)", "lat": -67.5686, "lon": -68.1269, "coord": "۶۷°۳۴′ جنوبی، ۶۸°۰۷′ غربی (جزیره Adelaide)"},
+    {"name": "Halley (بریتانیا)", "lat": -75.5833, "lon": -26.5000, "coord": "۷۵°۳۵′ جنوبی، ۲۶°۳۰′ غربی (فلات یخی Brunt)"},
+    {"name": "Sejong (کره جنوبی)", "lat": -62.2167, "lon": -58.7833, "coord": "۶۲°۱۳′ جنوبی، ۵۸°۴۷′ غربی (جزیره کینگ جورج)"},
 ]
 
-STATION_PROFILES = [
-    {
-        "name": "Vostok (روسیه)",
-        "coord": "۷۸°۲۸′ جنوبی، ۱۰۶°۴۸′ شرقی (ارتفاع ۳,۴۸۸ متر)",
-        "history": "این ایستگاه در ۱۶ دسامبر ۱۹۵۷ برای برنامه Международного геофизического года (IGY) تأسیس شد. نام آن از کشتی بادبانی «وستوک» گرفته شده که در سفر اکتشافی ۱۸۱۹-۱۸۲۱ روسیه به جنوبگان شرکت داشت. تا سال ۲۰۱۷، ۶۱ اکیپ زمستانی با مجموع ۱,۳۸۶ نفر در آن کار کرده‌اند.",
-        "ship": "پشتیبانی از این ایستگاه از طریق هواپیماهای مجهز به اسکی و کاروان‌های زمینی از ایستگاه Mirny انجام می‌شود. کشتی اختصاصی برای این ایستگاه وجود ندارد، اما کشتی‌های تحقیقاتی روسیه مانند *Akademik Fedorov* در فصول تابستان در سواحل جنوبگان حضور دارند.",
-        "activity": "تحقیقات اصلی شامل یخ‌شناسی (استخراج هسته یخی ۴۲۰,۰۰۰ ساله)، مشاهدات شفق قطبی (از دهه ۱۹۵۰)، میدان مغناطیسی زمین، و فیزیولوژی انسانی در شرایط سخت است."
-    },
-    {
-        "name": "Amundsen-Scott (آمریکا)",
-        "coord": "۹۰° جنوبی (قطب جنوب جغرافیایی، ارتفاع ۲,۹۰۰ متر)",
-        "history": "این ایستگاه در سال ۱۹۵۶ برای IGY ساخته شد و از آن زمان به طور مداوم فعال بوده است. نام آن از «روآلد آموندسن» و «رابرت اسکات» گرفته شده که اولین کاوشگران قطب جنوب بودند. ساختار فعلی (سومین ساختمان) در سال ۲۰۰۸ تکمیل شد.",
-        "ship": "پشتیبانی لجستیکی عمدتاً توسط هواپیماهای LC-130 (اسکی‌دار) از ایستگاه McMurdo انجام می‌شود. کشتی‌های باری *American Tern* و تانکر *Paul Buck* در فصول تابستان به McMurdo تدارکات می‌رسانند، اما دسترسی به خود قطب جنوب فقط از طریق هوا است.",
-        "activity": "تحقیقات در زمینه نجوم (رصدخانه نوترینو IceCube)، فیزیک جو، لرزه‌شناسی، و مطالعه تغییرات اقلیمی از طریق حبس هوا در یخ. همچنین به عنوان نقطه مرجع برای کالیبراسیون ماهواره‌ها استفاده می‌شود."
-    },
-    {
-        "name": "Maitri (هند)",
-        "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی (واحه Schirmacher، ارتفاع ۱۱۷ متر)",
-        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد و جایگزین ایستگاه Dakshin Gangotri (۱۹۸۳-۱۹۸۹) شد. این یک ایستگاه داخلی است که حدود ۱۰۰ کیلومتر از ساحل فاصله دارد و ظرفیت ۶۵ نفر در تابستان و ۲۵ نفر در زمستان را دارد.",
-        "ship": "دسترسی به این ایستگاه از طریق دریا بین نوامبر و مارس از کیپ‌تاون با کشتی‌های تحقیقاتی هند انجام می‌شود. همچنین پروازهای چارتر از کیپ‌تاون به باند فرودگاه Novo (DROMLAN) و سپس انتقال زمینی به Maitri امکان‌پذیر است.",
-        "activity": "تحقیقات در زمینه علوم جوی (رادار MARA برای مطالعه تلاطم و امواج)، علوم زمین و یخ‌شناسی، زیست‌شناسی، و فیزیولوژی انسانی. این ایستگاه به عنوان پایگاهی برای نقشه‌برداری زمین‌شناسی از رشته‌کوه‌های Wohlthat و Orvin استفاده می‌شود."
-    },
-    {
-        "name": "Zhongshan (چین)",
-        "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی (خلیج Prydz)",
-        "history": "این ایستگاه در سال ۱۹۸۹ تأسیس شد. در سال ۲۰۲۴، همزمان با چهلمین سالگرد سفرهای قطبی چین، «ایستگاه پس‌زمینه جوی ژونگشان» به طور رسمی افتتاح شد تا به عنوان نهمین ایستگاه پس‌زمینه جوی چین فعالیت کند.",
-        "ship": "پشتیبانی توسط یخ‌شکن *Xuelong* (اژدهای برفی) چین انجام می‌شود که هر ساله در فصل تابستان جنوبگان (نوامبر تا مارس) تدارکات و پرسنل را جابجا می‌کند.",
-        "activity": "مشاهدات طولانی‌مدت ترکیبات جوی (ازن، گازهای گلخانه‌ای مثل CO2 و متان)، مطالعه تغییرات اقلیمی، و تحقیقات زیست‌شناسی دریایی. داده‌های این ایستگاه در بولتن ازن جنوبگان WMO و گزارش‌های اقلیمی چین استفاده می‌شود."
-    },
-    {
-        "name": "Esperanza (آرژانتین)",
-        "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی (شبه‌جزیره جنوبگان)",
-        "history": "این ایستگاه از ۷ دسامبر ۱۹۵۲ به طور دائم فعال است. این تنها ایستگاه در جنوبگان است که خانواده‌ها (با کودکان) در آن زندگی می‌کنند و یک مدرسه دارد. در سال ۲۰۲۵، ۵۸ نفر (شامل نظامیان و خانواده‌ها) در آن حضور داشتند.",
-        "ship": "دسترسی از طریق کشتی‌های نیروی دریایی آرژانتین و همچنین پروازهای نظامی از فرودگاه Ushuaia (آرژانتین) به باند فرودگاه Marambio و سپس هلی‌کوپتر به Esperanza انجام می‌شود.",
-        "activity": "تحقیقات در زیست‌شناسی، زمین‌شناسی (لرزه‌نگار)، اقیانوس‌شناسی (جزر و مدسنج)، هواشناسی و محیط زیست. این ایستگاه به عنوان پایگاه پشتیبانی برای اکتشافات میدانی در شبه‌جزیره جنوبگان عمل می‌کند."
-    },
-]
-
-BOOK_POOL = [
-    {"title": "Where the Earth Meets the Sky", "author": "Louise K. Blight", "year": "2026", "desc": "سفرنامه علمی از یک فصل کار میدانی روی پنگوئن‌های آدلی در جزیره راس. ترکیبی از علم، طبیعت‌نویسی و تجربه انسانی در جنوبگان.", "link": "https://www.goodreads.com"},
-    {"title": "All About Antarctica", "author": "Marc Martin", "year": "2026", "desc": "یک کتاب مصور و آموزشی برای معرفی جنوبگان به مخاطب عمومی و نوجوان.", "link": "https://www.goodreads.com"},
-    {"title": "Antarctic Materialities", "author": "Various Authors", "year": "2026", "desc": "کتابی دانشگاهی درباره تاریخ، سیاست و ماده‌مندی جنوبگان.", "link": "https://www.berghahnbooks.com"},
-    {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
+HISTORY_NOTES = [
+    "عصر قهرمانان اکتشاف جنوبگان (دهه ۱۹۰۰): رقابت برای رسیدن به قطب جنوب، با پیروزی روآلد آموندسن نروژی در دسامبر ۱۹۱۱ و تراژدی رابرت اسکات بریتانیایی.",
+    "سال بین‌المللی ژئوفیزیک (۱۹۵۷-۱۹۵۸): ۱۲ کشور با تأسیس ۴۷ ایستگاه تحقیقاتی، همکاری علمی بی‌سابقه‌ای را در جنوبگان آغاز کردند.",
+    "پیمان جنوبگان (۱۹۵۹): با امضای ۱۲ کشور، جنوبگان به منطقه‌ای غیرنظامی و مختص تحقیقات صلح‌آمیز تبدیل شد. این پیمان در سال ۱۹۶۱ لازم‌الاجرا شد و امروز ۵۸ عضو دارد.",
 ]
 
 def get_gist_file(filename):
@@ -139,16 +106,9 @@ def get_earthquakes():
         return []
 
 def get_latest_paper():
-    """دریافت مقاله از Cambridge (Antarctic Science) با استفاده از Crossref برای چکیده"""
-    # جستجو در Crossref با فیلتر ISSN مجله Antarctic Science
     try:
         url = "https://api.crossref.org/works"
-        params = {
-            "filter": "issn:0954-1020,from-pub-date:2026-01-01,type:journal-article",
-            "rows": 1,
-            "sort": "published",
-            "order": "desc"
-        }
+        params = {"filter": "issn:0954-1020,from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
@@ -170,15 +130,9 @@ def get_latest_paper():
     except Exception as e:
         print("Crossref Cambridge error:", e)
 
-    # اگر Cambridge جواب نداد، از Polar Research استفاده کن
     try:
         url = "https://api.crossref.org/works"
-        params = {
-            "filter": "issn:1751-8369,from-pub-date:2026-01-01,type:journal-article",
-            "rows": 1,
-            "sort": "published",
-            "order": "desc"
-        }
+        params = {"filter": "issn:1751-8369,from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
@@ -246,8 +200,17 @@ def build_scientific_message():
     return msg
 
 def build_paper_message():
+    sent_papers = get_gist_users("sent_papers.json")
     paper = get_latest_paper()
     if not paper: return None
+    
+    paper_id = paper['link']
+    if paper_id in sent_papers:
+        return None
+        
+    sent_papers[paper_id] = datetime.now().isoformat()
+    save_gist_file("sent_papers.json", json.dumps(sent_papers, ensure_ascii=False, indent=2))
+    
     msg = "📄 **مقاله علمی روز (جنوبگان)** 📄\n\n"
     msg += f"🔹 **{paper['title']}**\n\n"
     msg += f"👤 **نویسنده اول:** {paper['author']}\n\n"
@@ -257,8 +220,23 @@ def build_paper_message():
     return msg
 
 def build_book_message():
-    day_of_year = datetime.now().timetuple().tm_yday
-    book = BOOK_POOL[day_of_year % len(BOOK_POOL)]
+    sent_books = get_gist_users("sent_books.json")
+    book_pool = [
+        {"title": "Where the Earth Meets the Sky", "author": "Louise K. Blight", "year": "2026", "desc": "سفرنامه علمی از یک فصل کار میدانی روی پنگوئن‌های آدلی در جزیره راس. ترکیبی از علم، طبیعت‌نویسی و تجربه انسانی در جنوبگان.", "link": "https://www.goodreads.com"},
+        {"title": "All About Antarctica", "author": "Marc Martin", "year": "2026", "desc": "یک کتاب مصور و آموزشی برای معرفی جنوبگان به مخاطب عمومی و نوجوان.", "link": "https://www.goodreads.com"},
+        {"title": "Antarctic Materialities", "author": "Various Authors", "year": "2026", "desc": "کتابی دانشگاهی درباره تاریخ، سیاست و ماده‌مندی جنوبگان.", "link": "https://www.berghahnbooks.com"},
+        {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
+    ]
+    
+    available_books = [b for b in book_pool if b['title'] not in sent_books]
+    if not available_books:
+        sent_books = {}
+        available_books = book_pool
+        
+    book = available_books[0]
+    sent_books[book['title']] = datetime.now().isoformat()
+    save_gist_file("sent_books.json", json.dumps(sent_books, ensure_ascii=False, indent=2))
+    
     msg = "📚 **معرفی کتاب جنوبگان** 📚\n\n"
     msg += f"🔹 **{book['title']}**\n\n"
     msg += f"✍️ **نویسنده:** {book['author']} ({book['year']})\n\n"
@@ -269,7 +247,6 @@ def build_book_message():
 
 def build_news_message():
     sent_news = get_gist_users("sent_news.json")
-    # لیست اخبار ثابت (برای تست)
     news_pool = [
         {"id": "aap_casey_airdrop_2026", "title": "آغاز تابستان در ایستگاه کیسی با فرود C-17", "text": "فصل تابستان در ایستگاه کیسی با فرود یک هواپیمای C-17 و رهاسازی ۱۸ چتر حاوی مواد غذایی، دارو و نامه‌ها آغاز شد.", "link": "https://www.antarctica.gov.au/news/stations/casey/2026/16-october/"},
         {"id": "aap_ice_drill_2026", "title": "حفاری ۴۰۰ متری دانشمندان استرالیایی", "text": "دانشمندان استرالیایی ۴۰۰ متر در ورقه یخی جنوبگان حفاری کردند تا یخی را که در پایان آخرین عصر یخبندان تشکیل شده بود، استخراج کنند.", "link": "https://www.antarctica.gov.au/news/2026/ice-age-drillers/"}
@@ -301,15 +278,24 @@ def build_station_activity_message():
     return msg
 
 def build_station_profile_message():
-    day_of_month = datetime.now().day
-    profile = STATION_PROFILES[day_of_month % len(STATION_PROFILES)]
+    sent_profiles = get_gist_users("sent_profiles.json")
+    
+    available_stations = [s for s in ANTARCTICA_STATIONS if s['name'] not in sent_profiles]
+    if not available_stations:
+        sent_profiles = {}
+        available_stations = ANTARCTICA_STATIONS
+        
+    station = available_stations[0]
+    sent_profiles[station['name']] = datetime.now().isoformat()
+    save_gist_file("sent_profiles.json", json.dumps(sent_profiles, ensure_ascii=False, indent=2))
+    
+    history_note = HISTORY_NOTES[datetime.now().day % len(HISTORY_NOTES)]
+    
     msg = "🏛️ **معرفی ایستگاه جنوبگان** 🏛️\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
-    msg += f"📍 **{profile['name']}**\n"
-    msg += f"🗺️ **مختصات:** {profile['coord']}\n\n"
-    msg += f"📜 **تاریخچه:**\n{profile['history']}\n\n"
-    msg += f"🚢 **کشتی/لجستیک:**\n{profile['ship']}\n\n"
-    msg += f"🔬 **فعالیت‌ها:**\n{profile['activity']}\n"
+    msg += f"📍 **{station['name']}**\n"
+    msg += f"🗺️ **مختصات:** {station['coord']}\n\n"
+    msg += f"📜 **نکته تاریخی:**\n{history_note}\n"
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
@@ -345,31 +331,20 @@ async def main():
     
     # ۱. هشدار طوفان (همیشه بررسی می‌شود)
     weather_msg, alerts = build_weather_message()
-    
     if alerts:
-        alert_msg = "🚨 **هشدار فوری طوفان / کولاک شدید در قطب جنوب** 🚨\n\n"
-        alert_msg += "📅 " + now_jalali() + "\n"
-        alert_msg += "━━━━━━━━━━━━━━━\n\n"
-        for a in alerts:
-            alert_msg += f"⚠️ **{a['station']}**\n   💨 سرعت باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
+        alert_msg = "🚨 **هشدار فوری طوفان / کولاک شدید در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
+        for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 سرعت باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
         alert_msg += "━━━━━━━━━━━━━━━\n"
         await send_telegram(alert_msg)
         send_bale(alert_msg)
         print("Storm alert sent.")
     elif is_manual_run:
-        # در حالت تست دستی، اگر طوفان نبود، یک پیام وضعیت عادی بفرست
-        normal_msg = "✅ **وضعیت طوفان: عادی**\n\n"
-        normal_msg += "📅 " + now_jalali() + "\n"
-        normal_msg += "━━━━━━━━━━━━━━━\n\n"
-        normal_msg += "در حال حاضر باد در هیچ‌یک از ایستگاه‌های جنوبگان از آستانه ۵۰ کیلومتر بر ساعت عبور نکرده است.\n"
-        normal_msg += "\n━━━━━━━━━━━━━━━\n"
+        normal_msg = "✅ **وضعیت طوفان: عادی**\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\nدر حال حاضر باد در هیچ‌یک از ایستگاه‌ها از آستانه ۵۰ کیلومتر بر ساعت عبور نکرده است.\n\n━━━━━━━━━━━━━━━\n"
         await send_telegram(normal_msg)
         send_bale(normal_msg)
         print("Normal weather status sent (manual run).")
-    else:
-        print("No storm alerts (wind < 50).")
 
-    # ۲. داده‌های علمی (شفق و زلزله)
+    # ۲. داده‌های علمی (همیشه)
     sci_msg = build_scientific_message()
     await send_telegram(sci_msg)
     send_bale(sci_msg)
@@ -402,13 +377,18 @@ async def main():
             await send_telegram(paper_msg)
             send_bale(paper_msg)
             print("Paper sent.")
+        else:
+            print("No new paper.")
 
-    # ۵. معرفی کتاب و ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی)
+    # ۵. کتاب و معرفی ایستگاه (روزهای زوج، ساعت ۶ صبح یا اجرای دستی)
     if (current_hour == 6 and is_even_day) or is_manual_run:
         book_msg = build_book_message()
-        await send_telegram(book_msg)
-        send_bale(book_msg)
-        print("Book sent.")
+        if book_msg:
+            await send_telegram(book_msg)
+            send_bale(book_msg)
+            print("Book sent.")
+        else:
+            print("No new book.")
 
         profile_msg = build_station_profile_message()
         await send_telegram(profile_msg)
