@@ -334,7 +334,6 @@ async def main():
     
     now_tehran = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=3, minutes=30)
     current_hour = now_tehran.hour
-    current_minute = now_tehran.minute
     
     # ۱. هشدار طوفان
     weather_msg, alerts = build_weather_message()
@@ -353,38 +352,38 @@ async def main():
         send_bale(sci_msg)
         print("Scientific data sent.")
 
-    # ۳. آب‌وهوا (ساعت ۱۱ صبح و ۱۱ شب تهران)
-    if (current_hour == 11 and 0 <= current_minute < 30) or (current_hour == 23 and 0 <= current_minute < 30):
+    # ۳. آب‌وهوا (ساعت ۱۱ صبح و ۱۱ شب تهران - در هر دقیقه‌ای از این ساعت)
+    if current_hour == 11 or current_hour == 23:
         image_bytes = get_webcam_image()
         await send_telegram(weather_msg, image_bytes)
         send_bale(weather_msg, image_bytes)
         print("Weather sent.")
 
     # ۴. فعالیت ایستگاه‌ها (فقط ساعت ۱۱ صبح تهران)
-    if current_hour == 11 and 0 <= current_minute < 30:
+    if current_hour == 11:
         activity_msg = build_station_activity_message()
         await send_telegram(activity_msg)
         send_bale(activity_msg)
         print("Station activities sent.")
 
-    # ۵. اخبار (ساعت ۱۰:۳۰ صبح و ۱۰:۳۰ شب تهران)
-    if (current_hour == 10 and 30 <= current_minute < 60) or (current_hour == 22 and 30 <= current_minute < 60):
+    # ۵. اخبار (ساعت ۱۰ صبح و ۱۰ شب تهران)
+    if current_hour == 10 or current_hour == 22:
         news_msg = build_news_message()
         if news_msg:
             await send_telegram(news_msg)
             send_bale(news_msg)
             print("News sent.")
 
-    # ۶. مقاله علمی (ساعت ۸:۰۰ صبح تهران)
-    if current_hour == 8 and 0 <= current_minute < 30:
+    # ۶. مقاله علمی (ساعت ۸ صبح تهران)
+    if current_hour == 8:
         paper_msg = build_paper_message()
         if paper_msg:
             await send_telegram(paper_msg)
             send_bale(paper_msg)
             print("Paper sent.")
 
-    # ۷. کتاب + معرفی ایستگاه (ساعت ۷:۰۰ صبح تهران)
-    if current_hour == 7 and 0 <= current_minute < 30:
+    # ۷. کتاب + معرفی ایستگاه (ساعت ۷ صبح تهران)
+    if current_hour == 7:
         book_msg = build_book_message()
         if book_msg:
             await send_telegram(book_msg)
