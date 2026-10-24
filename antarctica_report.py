@@ -94,13 +94,40 @@ def get_kp_index():
     return None
 
 def get_earthquakes():
+    """دریافت زمین‌لرزه‌های جدید جنوبگان از USGS (با جلوگیری از تکرار)"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    params = {"format": "geojson", "minlatitude": -90, "maxlatitude": -60, "minmagnitude": 4.0, "starttime": (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"), "orderby": "time"}
+    params = {
+        "format": "geojson",
+        "minlatitude": -90,
+        "maxlatitude": -60,
+        "minmagnitude": 4.0,
+        "starttime": (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"),
+        "orderby": "time"
+    }
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
-        return [{"mag": f["properties"]["mag"], "place": f["properties"]["place"]} for f in data["features"][:3]]
+        
+        # خواندن زلزله‌های ارسال‌شده قبلی
+        sent_quakes = get_gist_users("sent_quakes.json")
+        new_quakes = []
+        
+        for f in data["features"][:5]: # بررسی 5 زلزله آخر
+            quake_id = f["id"]
+            if quake_id not in sent_quakes:
+                new_quakes.append({
+                    "id": quake_id,
+                    "mag": f["properties"]["mag"],
+                    "place": f["properties"]["place"]
+                })
+                # ذخیره ID زلزله جدید در Gist
+                sent_quakes[quake_id] = datetime.now().isoformat()
+        
+        if new_quakes:
+            save_gist_file("sent_quakes.json", json.dumps(sent_quakes, ensure_ascii=False, indent=2))
+        
+        return new_quakes
     except Exception as e:
         print("USGS error:", e)
         return []
@@ -189,6 +216,7 @@ def build_scientific_message():
     kp = get_kp_index()
     quakes = get_earthquakes()
     
+    # اگر نه شفق قوی بود و نه زلزله جدید، پیام نده
     if (kp is None or float(kp) < 5) and not quakes:
         return None
         
@@ -196,13 +224,14 @@ def build_scientific_message():
     msg += "━━━━━━━━━━━━━━━\n\n"
     
     if kp and float(kp) >= 5:
-        msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp} (فعال!)\n"
+        msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp} (فعال!)\n\n"
     
     if quakes:
-        msg += "\n🌍 **زمین‌لرزه‌های ۲۴ ساعت گذشته (M4+):**\n"
-        for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
+        msg += "🌍 **زمین‌لرزه‌های جدید (M4+):**\n"
+        for q in quakes: 
+            msg += f"   • M{q['mag']} - {q['place']}\n"
     else:
-        msg += "\n🌍 **زمین‌لرزه‌ها:** در ۲۴ ساعت گذشته زمین‌لرزه‌ای بالای ۴ ریشتر ثبت نشده است.\n"
+        msg += "🌍 **زمین‌لرزه‌ها:** زلزله جدیدی ثبت نشده است.\n"
         
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
