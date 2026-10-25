@@ -384,7 +384,7 @@ async def main():
         send_bale(sci_msg)
         print("Scientific data sent.")
 
-    # ۳. آب‌وهوا (ساعت ۱۱ صبح و ۱۱ شب تهران - در هر دقیقه‌ای از این ساعت)
+    # ۳. آب‌وهوا (ساعت ۱۱ صبح و ۱۱ شب تهران)
     if current_hour == 11 or current_hour == 23:
         image_bytes = get_webcam_image()
         await send_telegram(weather_msg, image_bytes)
