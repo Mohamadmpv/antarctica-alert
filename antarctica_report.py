@@ -20,18 +20,18 @@ GH_PAT = os.getenv("GH_PAT")
 WIND_THRESHOLD = 50
 
 ANTARCTICA_STATIONS = [
-    {"name": "Vostok (روسیه)", "lat": -78.4645, "lon": 106.8317, "coord": "۷۸°۲۸′ جنوبی، ۱۰۶°۴۸′ شرقی (ارتفاع ۳,۴۸۸ متر)"},
-    {"name": "Amundsen-Scott (آمریکا)", "lat": -90.0, "lon": 0.0, "coord": "۹۰° جنوبی (قطب جنوب جغرافیایی، ارتفاع ۲,۹۰۰ متر)"},
+    {"name": "Vostok (روسیه)", "lat": -78.4645, "lon": 106.8317, "coord": "۷۸°۲۸′ جنوبی، ۱۰۶°۴۸′ شرقی"},
+    {"name": "Amundsen-Scott (آمریکا)", "lat": -90.0, "lon": 0.0, "coord": "۹۰° جنوبی"},
     {"name": "Novolazarevskaya (روسیه)", "lat": -70.7667, "lon": 11.8333, "coord": "۷۰°۴۶′ جنوبی، ۱۱°۵۰′ شرقی"},
-    {"name": "Maitri (هند)", "lat": -70.7500, "lon": 11.7167, "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی (واحه Schirmacher، ارتفاع ۱۱۷ متر)"},
-    {"name": "Zhongshan (چین)", "lat": -69.3667, "lon": 76.3667, "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی (خلیج Prydz)"},
-    {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833, "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی (شبه‌جزیره جنوبگان)"},
-    {"name": "Casey (استرالیا)", "lat": -66.2833, "lon": 110.5167, "coord": "۶۶°۱۷′ جنوبی، ۱۱۰°۳۱′ شرقی (خلیج Vincennes)"},
-    {"name": "Davis (استرالیا)", "lat": -68.5764, "lon": 77.9694, "coord": "۶۸°۳۴′ جنوبی، ۷۷°۵۸′ شرقی (سرزمین پرنسس الیزابت)"},
-    {"name": "Mawson (استرالیا)", "lat": -67.6028, "lon": 62.8731, "coord": "۶۷°۳۶′ جنوبی، ۶۲°۵۲′ شرقی (سرزمین Mac Robertson)"},
-    {"name": "Rothera (بریتانیا)", "lat": -67.5686, "lon": -68.1269, "coord": "۶۷°۳۴′ جنوبی، ۶۸°۰۷′ غربی (جزیره Adelaide)"},
-    {"name": "Halley (بریتانیا)", "lat": -75.5833, "lon": -26.5000, "coord": "۷۵°۳۵′ جنوبی، ۲۶°۳۰′ غربی (فلات یخی Brunt)"},
-    {"name": "Sejong (کره جنوبی)", "lat": -62.2167, "lon": -58.7833, "coord": "۶۲°۱۳′ جنوبی، ۵۸°۴۷′ غربی (جزیره کینگ جورج)"},
+    {"name": "Maitri (هند)", "lat": -70.7500, "lon": 11.7167, "coord": "۷۰°۴۵′ جنوبی، ۱۱°۴۳′ شرقی"},
+    {"name": "Zhongshan (چین)", "lat": -69.3667, "lon": 76.3667, "coord": "۶۹°۲۲′ جنوبی، ۷۶°۲۲′ شرقی"},
+    {"name": "Esperanza (آرژانتین)", "lat": -63.4000, "lon": -56.9833, "coord": "۶۳°۲۴′ جنوبی، ۵۶°۵۹′ غربی"},
+    {"name": "Casey (استرالیا)", "lat": -66.2833, "lon": 110.5167, "coord": "۶۶°۱۷′ جنوبی، ۱۱۰°۳۱′ شرقی"},
+    {"name": "Davis (استرالیا)", "lat": -68.5764, "lon": 77.9694, "coord": "۶۸°۳۴′ جنوبی، ۷۷°۵۸′ شرقی"},
+    {"name": "Mawson (استرالیا)", "lat": -67.6028, "lon": 62.8731, "coord": "۶۷°۳۶′ جنوبی، ۶۲°۵۲′ شرقی"},
+    {"name": "Rothera (بریتانیا)", "lat": -67.5686, "lon": -68.1269, "coord": "۶۷°۳۴′ جنوبی، ۶۸°۰۷′ غربی"},
+    {"name": "Halley (بریتانیا)", "lat": -75.5833, "lon": -26.5000, "coord": "۷۵°۳۵′ جنوبی، ۲۶°۳۰′ غربی"},
+    {"name": "Sejong (کره جنوبی)", "lat": -62.2167, "lon": -58.7833, "coord": "۶۲°۱۳′ جنوبی، ۵۸°۴۷′ غربی"},
 ]
 
 HISTORY_NOTES = [
@@ -71,6 +71,25 @@ def get_gist_users(filename):
     except Exception:
         return {}
 
+def check_already_sent(section):
+    """بررسی اینکه آیا این بخش در ۴ ساعت گذشته ارسال شده یا نه (برای جلوگیری از تکرار بین کامپیوتر و گیت‌هاب)"""
+    sent_status = get_gist_users("last_sent_status.json")
+    last_sent_str = sent_status.get(section)
+    if last_sent_str:
+        try:
+            last_sent = datetime.fromisoformat(last_sent_str)
+            now = datetime.now()
+            if (now - last_sent).total_seconds() < 4 * 3600: # کمتر از 4 ساعت
+                return True
+        except Exception:
+            pass
+    return False
+
+def mark_as_sent(section):
+    sent_status = get_gist_users("last_sent_status.json")
+    sent_status[section] = datetime.now().isoformat()
+    save_gist_file("last_sent_status.json", json.dumps(sent_status, ensure_ascii=False, indent=2))
+
 def get_weather_data(lat, lon):
     url = "https://api.open-meteo.com/v1/forecast"
     params = {"latitude": lat, "longitude": lon, "current": "temperature_2m,wind_speed_10m", "timezone": "UTC"}
@@ -90,7 +109,7 @@ def get_kp_index():
         if len(data) > 1:
             return data[-1][1]
     except Exception as e:
-        print("Kp NOAA error:", e)
+        print("Kp NOAA error (skipped):", e)
     return None
 
 def get_earthquakes():
@@ -113,7 +132,7 @@ def get_earthquakes():
             save_gist_file("sent_quakes.json", json.dumps(sent_quakes, ensure_ascii=False, indent=2))
         return new_quakes
     except Exception as e:
-        print("USGS error:", e)
+        print("USGS error (skipped):", e)
         return []
 
 def get_latest_paper():
@@ -137,29 +156,7 @@ def get_latest_paper():
             first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
     except Exception as e:
-        print("Crossref Cambridge error:", e)
-
-    try:
-        url = "https://api.crossref.org/works"
-        params = {"filter": "issn:1751-8369,from-pub-date:2026-01-01,type:journal-article", "rows": 1, "sort": "published", "order": "desc"}
-        r = requests.get(url, params=params, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        if data["message"]["items"]:
-            item = data["message"]["items"][0]
-            title = item.get("title", ["بدون عنوان"])[0]
-            doi = item.get("DOI", "")
-            abstract = item.get("abstract", "")
-            if abstract:
-                abstract = re.sub(r'<[^>]+>', '', abstract)
-                abstract = ' '.join(abstract.split())
-                if len(abstract) > 400: abstract = abstract[:400] + "..."
-            else: abstract = "چکیده در دسترس نیست."
-            authors = item.get("author", [])
-            first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
-            return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
-    except Exception as e:
-        print("Crossref Polar Research error:", e)
+        print("Crossref error (skipped):", e)
     return None
 
 def get_webcam_image():
@@ -326,16 +323,20 @@ async def main():
     current_hour = now_tehran.hour
     
     # ۱. هشدار طوفان
-    weather_msg, alerts = build_weather_message()
-    if alerts:
-        alert_msg = "🚨 **هشدار فوری طوفان / کولاک شدید در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
-        for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 سرعت باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
-        alert_msg += "━━━━━━━━━━━━━━━\n"
-        await send_telegram(alert_msg)
-        send_bale(alert_msg)
-        print("Storm alert sent.")
+    try:
+        weather_msg, alerts = build_weather_message()
+        if alerts:
+            alert_msg = "🚨 **هشدار فوری طوفان / کولاک شدید در قطب جنوب** 🚨\n\n📅 " + now_jalali() + "\n━━━━━━━━━━━━━━━\n\n"
+            for a in alerts: alert_msg += f"⚠️ **{a['station']}**\n   💨 سرعت باد: {a['wind']} km/h\n   🌡️ دما: {a['temp']}°C\n\n"
+            alert_msg += "━━━━━━━━━━━━━━━\n"
+            await send_telegram(alert_msg)
+            send_bale(alert_msg)
+            print("Storm alert sent.")
+    except Exception as e:
+        print("Weather build error:", e)
+        weather_msg = "داده‌های آب‌وهوا در دسترس نیست."
 
-    # ۲. داده‌های علمی (با try/except)
+    # ۲. داده‌های علمی
     try:
         sci_msg = build_scientific_message()
         if sci_msg:
@@ -345,55 +346,14 @@ async def main():
     except Exception as e:
         print("Scientific error:", e)
 
-    # ۳. آب‌وهوا
-    if current_hour == 11 or current_hour == 23:
-        try:
-            image_bytes = get_webcam_image()
-            await send_telegram(weather_msg, image_bytes)
-            send_bale(weather_msg, image_bytes)
-            print("Weather sent.")
-        except Exception as e:
-            print("Weather error:", e)
-
-    # ۴. فعالیت ایستگاه‌ها
-    if current_hour == 11:
-        try:
-            activity_msg = build_station_activity_message()
-            await send_telegram(activity_msg)
-            send_bale(activity_msg)
-            print("Station activities sent.")
-        except Exception as e:
-            print("Activity error:", e)
-
-    # ۵. اخبار
-    if current_hour == 10 or current_hour == 22:
-        try:
-            news_msg = build_news_message()
-            if news_msg:
-                await send_telegram(news_msg)
-                send_bale(news_msg)
-                print("News sent.")
-        except Exception as e:
-            print("News error:", e)
-
-    # ۶. مقاله علمی
-    if current_hour == 8:
-        try:
-            paper_msg = build_paper_message()
-            if paper_msg:
-                await send_telegram(paper_msg)
-                send_bale(paper_msg)
-                print("Paper sent.")
-        except Exception as e:
-            print("Paper error:", e)
-
-    # ۷. کتاب + معرفی ایستگاه
-    if current_hour == 7:
+    # ۳. کتاب (بازه ۳ تا ۵ صبح با جلوگیری از تکرار)
+    if 3 <= current_hour <= 5 and not check_already_sent("book"):
         try:
             book_msg = build_book_message()
             if book_msg:
                 await send_telegram(book_msg)
                 send_bale(book_msg)
+                mark_as_sent("book")
                 print("Book sent.")
 
             profile_msg = build_station_profile_message()
@@ -402,6 +362,57 @@ async def main():
             print("Station profile sent.")
         except Exception as e:
             print("Book/Profile error:", e)
+
+    # ۴. مقاله (بازه ۴ تا ۶ صبح با جلوگیری از تکرار)
+    if 4 <= current_hour <= 6 and not check_already_sent("paper"):
+        try:
+            paper_msg = build_paper_message()
+            if paper_msg:
+                await send_telegram(paper_msg)
+                send_bale(paper_msg)
+                mark_as_sent("paper")
+                print("Paper sent.")
+        except Exception as e:
+            print("Paper error:", e)
+
+    # ۵. اخبار (بازه ۶ تا ۸ صبح با جلوگیری از تکرار)
+    if 6 <= current_hour <= 8 and not check_already_sent("news"):
+        try:
+            news_msg = build_news_message()
+            if news_msg:
+                await send_telegram(news_msg)
+                send_bale(news_msg)
+                mark_as_sent("news")
+                print("News sent.")
+        except Exception as e:
+            print("News error:", e)
+
+    # ۶. آب‌وهوا و فعالیت‌ها (بازه ۷ تا ۹ صبح با جلوگیری از تکرار)
+    if 7 <= current_hour <= 9 and not check_already_sent("weather"):
+        try:
+            image_bytes = get_webcam_image()
+            await send_telegram(weather_msg, image_bytes)
+            send_bale(weather_msg, image_bytes)
+            mark_as_sent("weather")
+            print("Weather sent.")
+
+            activity_msg = build_station_activity_message()
+            await send_telegram(activity_msg)
+            send_bale(activity_msg)
+            print("Station activities sent.")
+        except Exception as e:
+            print("Weather/Activity error:", e)
+
+    # ۷. آب‌وهوای شب (بازه ۱۹ تا ۲۱ با جلوگیری از تکرار)
+    if 19 <= current_hour <= 21 and not check_already_sent("evening_weather"):
+        try:
+            image_bytes = get_webcam_image()
+            await send_telegram(weather_msg, image_bytes)
+            send_bale(weather_msg, image_bytes)
+            mark_as_sent("evening_weather")
+            print("Evening weather sent.")
+        except Exception as e:
+            print("Evening weather error:", e)
 
     print("Done.")
 
