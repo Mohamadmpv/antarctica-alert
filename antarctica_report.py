@@ -94,7 +94,7 @@ def get_kp_index():
     return None
 
 def get_earthquakes():
-    """دریافت زمین‌لرزه‌های جدید جنوبگان از USGS (با جلوگیری از تکرار)"""
+    """دریافت زمین‌لرزه‌های جدید جنوبگان از USGS (با جلوگیری از تکرار بر اساس مکان و شدت)"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
     params = {
         "format": "geojson",
@@ -114,15 +114,18 @@ def get_earthquakes():
         new_quakes = []
         
         for f in data["features"][:5]: # بررسی 5 زلزله آخر
-            quake_id = f["id"]
-            if quake_id not in sent_quakes:
+            mag = f["properties"]["mag"]
+            place = f["properties"]["place"]
+            # ساخت یک کلید یکتا بر اساس شدت و مکان (نه ID)
+            quake_key = f"{mag}_{place}"
+            
+            if quake_key not in sent_quakes:
                 new_quakes.append({
-                    "id": quake_id,
-                    "mag": f["properties"]["mag"],
-                    "place": f["properties"]["place"]
+                    "mag": mag,
+                    "place": place
                 })
-                # ذخیره ID زلزله جدید در Gist
-                sent_quakes[quake_id] = datetime.now().isoformat()
+                # ذخیره کلید زلزله جدید در Gist
+                sent_quakes[quake_key] = datetime.now().isoformat()
         
         if new_quakes:
             save_gist_file("sent_quakes.json", json.dumps(sent_quakes, ensure_ascii=False, indent=2))
