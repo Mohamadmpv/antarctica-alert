@@ -94,42 +94,23 @@ def get_kp_index():
     return None
 
 def get_earthquakes():
-    """دریافت زمین‌لرزه‌های جدید جنوبگان از USGS (با جلوگیری از تکرار بر اساس مکان و شدت)"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    params = {
-        "format": "geojson",
-        "minlatitude": -90,
-        "maxlatitude": -60,
-        "minmagnitude": 4.0,
-        "starttime": (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"),
-        "orderby": "time"
-    }
+    params = {"format": "geojson", "minlatitude": -90, "maxlatitude": -60, "minmagnitude": 4.0, "starttime": (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"), "orderby": "time"}
     try:
         r = requests.get(url, params=params, timeout=30)
         r.raise_for_status()
         data = r.json()
-        
-        # خواندن زلزله‌های ارسال‌شده قبلی
         sent_quakes = get_gist_users("sent_quakes.json")
         new_quakes = []
-        
-        for f in data["features"][:5]: # بررسی 5 زلزله آخر
+        for f in data["features"][:5]:
             mag = f["properties"]["mag"]
             place = f["properties"]["place"]
-            # ساخت یک کلید یکتا بر اساس شدت و مکان (نه ID)
             quake_key = f"{mag}_{place}"
-            
             if quake_key not in sent_quakes:
-                new_quakes.append({
-                    "mag": mag,
-                    "place": place
-                })
-                # ذخیره کلید زلزله جدید در Gist
+                new_quakes.append({"mag": mag, "place": place})
                 sent_quakes[quake_key] = datetime.now().isoformat()
-        
         if new_quakes:
             save_gist_file("sent_quakes.json", json.dumps(sent_quakes, ensure_ascii=False, indent=2))
-        
         return new_quakes
     except Exception as e:
         print("USGS error:", e)
@@ -150,10 +131,8 @@ def get_latest_paper():
             if abstract:
                 abstract = re.sub(r'<[^>]+>', '', abstract)
                 abstract = ' '.join(abstract.split())
-                if len(abstract) > 400:
-                    abstract = abstract[:400] + "..."
-            else:
-                abstract = "چکیده در دسترس نیست."
+                if len(abstract) > 400: abstract = abstract[:400] + "..."
+            else: abstract = "چکیده در دسترس نیست."
             authors = item.get("author", [])
             first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
@@ -174,16 +153,13 @@ def get_latest_paper():
             if abstract:
                 abstract = re.sub(r'<[^>]+>', '', abstract)
                 abstract = ' '.join(abstract.split())
-                if len(abstract) > 400:
-                    abstract = abstract[:400] + "..."
-            else:
-                abstract = "چکیده در دسترس نیست."
+                if len(abstract) > 400: abstract = abstract[:400] + "..."
+            else: abstract = "چکیده در دسترس نیست."
             authors = item.get("author", [])
             first_author = authors[0].get("family", "نامشخص") if authors else "نامشخص"
             return {"title": title, "link": f"https://doi.org/{doi}", "abstract": abstract, "author": first_author}
     except Exception as e:
         print("Crossref Polar Research error:", e)
-
     return None
 
 def get_webcam_image():
@@ -218,24 +194,17 @@ def build_weather_message():
 def build_scientific_message():
     kp = get_kp_index()
     quakes = get_earthquakes()
-    
-    # اگر نه شفق قوی بود و نه زلزله جدید، پیام نده
     if (kp is None or float(kp) < 5) and not quakes:
         return None
-        
     msg = "🔬 **داده‌های علمی زنده** 🔬\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
-    
     if kp and float(kp) >= 5:
         msg += f"🌌 **شفق قطبی (شاخص Kp):** {kp} (فعال!)\n\n"
-    
     if quakes:
         msg += "🌍 **زمین‌لرزه‌های جدید (M4+):**\n"
-        for q in quakes: 
-            msg += f"   • M{q['mag']} - {q['place']}\n"
+        for q in quakes: msg += f"   • M{q['mag']} - {q['place']}\n"
     else:
         msg += "🌍 **زمین‌لرزه‌ها:** زلزله جدیدی ثبت نشده است.\n"
-        
     msg += "\n━━━━━━━━━━━━━━━\n"
     return msg
 
@@ -243,14 +212,10 @@ def build_paper_message():
     sent_papers = get_gist_users("sent_papers.json")
     paper = get_latest_paper()
     if not paper: return None
-    
     paper_id = paper['link']
-    if paper_id in sent_papers:
-        return None
-        
+    if paper_id in sent_papers: return None
     sent_papers[paper_id] = datetime.now().isoformat()
     save_gist_file("sent_papers.json", json.dumps(sent_papers, ensure_ascii=False, indent=2))
-    
     msg = "📄 **مقاله علمی روز (جنوبگان)** 📄\n\n"
     msg += f"🔹 **{paper['title']}**\n\n"
     msg += f"👤 **نویسنده اول:** {paper['author']}\n\n"
@@ -267,16 +232,13 @@ def build_book_message():
         {"title": "Antarctic Materialities", "author": "Various Authors", "year": "2026", "desc": "کتابی دانشگاهی درباره تاریخ، سیاست و ماده‌مندی جنوبگان.", "link": "https://www.berghahnbooks.com"},
         {"title": "From the Amazon to Antarctica", "author": "Kim Bong-chul", "year": "2026", "desc": "کتابی درباره بحران اقلیمی که آمازون و جنوبگان را به هم پیوند می‌دهد.", "link": "https://www.goodreads.com"},
     ]
-    
     available_books = [b for b in book_pool if b['title'] not in sent_books]
     if not available_books:
         sent_books = {}
         available_books = book_pool
-        
     book = available_books[0]
     sent_books[book['title']] = datetime.now().isoformat()
     save_gist_file("sent_books.json", json.dumps(sent_books, ensure_ascii=False, indent=2))
-    
     msg = "📚 **معرفی کتاب جنوبگان** 📚\n\n"
     msg += f"🔹 **{book['title']}**\n\n"
     msg += f"✍️ **نویسنده:** {book['author']} ({book['year']})\n\n"
@@ -319,18 +281,14 @@ def build_station_activity_message():
 
 def build_station_profile_message():
     sent_profiles = get_gist_users("sent_profiles.json")
-    
     available_stations = [s for s in ANTARCTICA_STATIONS if s['name'] not in sent_profiles]
     if not available_stations:
         sent_profiles = {}
         available_stations = ANTARCTICA_STATIONS
-        
     station = available_stations[0]
     sent_profiles[station['name']] = datetime.now().isoformat()
     save_gist_file("sent_profiles.json", json.dumps(sent_profiles, ensure_ascii=False, indent=2))
-    
     history_note = HISTORY_NOTES[datetime.now().day % len(HISTORY_NOTES)]
-    
     msg = "🏛️ **معرفی ایستگاه جنوبگان** 🏛️\n\n📅 " + now_jalali() + "\n"
     msg += "━━━━━━━━━━━━━━━\n\n"
     msg += f"📍 **{station['name']}**\n"
@@ -377,55 +335,73 @@ async def main():
         send_bale(alert_msg)
         print("Storm alert sent.")
 
-    # ۲. داده‌های علمی
-    sci_msg = build_scientific_message()
-    if sci_msg:
-        await send_telegram(sci_msg)
-        send_bale(sci_msg)
-        print("Scientific data sent.")
+    # ۲. داده‌های علمی (با try/except)
+    try:
+        sci_msg = build_scientific_message()
+        if sci_msg:
+            await send_telegram(sci_msg)
+            send_bale(sci_msg)
+            print("Scientific data sent.")
+    except Exception as e:
+        print("Scientific error:", e)
 
-    # ۳. آب‌وهوا (ساعت ۱۱ صبح و ۱۱ شب تهران)
+    # ۳. آب‌وهوا
     if current_hour == 11 or current_hour == 23:
-        image_bytes = get_webcam_image()
-        await send_telegram(weather_msg, image_bytes)
-        send_bale(weather_msg, image_bytes)
-        print("Weather sent.")
+        try:
+            image_bytes = get_webcam_image()
+            await send_telegram(weather_msg, image_bytes)
+            send_bale(weather_msg, image_bytes)
+            print("Weather sent.")
+        except Exception as e:
+            print("Weather error:", e)
 
-    # ۴. فعالیت ایستگاه‌ها (فقط ساعت ۱۱ صبح تهران)
+    # ۴. فعالیت ایستگاه‌ها
     if current_hour == 11:
-        activity_msg = build_station_activity_message()
-        await send_telegram(activity_msg)
-        send_bale(activity_msg)
-        print("Station activities sent.")
+        try:
+            activity_msg = build_station_activity_message()
+            await send_telegram(activity_msg)
+            send_bale(activity_msg)
+            print("Station activities sent.")
+        except Exception as e:
+            print("Activity error:", e)
 
-    # ۵. اخبار (ساعت ۱۰ صبح و ۱۰ شب تهران)
+    # ۵. اخبار
     if current_hour == 10 or current_hour == 22:
-        news_msg = build_news_message()
-        if news_msg:
-            await send_telegram(news_msg)
-            send_bale(news_msg)
-            print("News sent.")
+        try:
+            news_msg = build_news_message()
+            if news_msg:
+                await send_telegram(news_msg)
+                send_bale(news_msg)
+                print("News sent.")
+        except Exception as e:
+            print("News error:", e)
 
-    # ۶. مقاله علمی (ساعت ۸ صبح تهران)
+    # ۶. مقاله علمی
     if current_hour == 8:
-        paper_msg = build_paper_message()
-        if paper_msg:
-            await send_telegram(paper_msg)
-            send_bale(paper_msg)
-            print("Paper sent.")
+        try:
+            paper_msg = build_paper_message()
+            if paper_msg:
+                await send_telegram(paper_msg)
+                send_bale(paper_msg)
+                print("Paper sent.")
+        except Exception as e:
+            print("Paper error:", e)
 
-    # ۷. کتاب + معرفی ایستگاه (ساعت ۷ صبح تهران)
+    # ۷. کتاب + معرفی ایستگاه
     if current_hour == 7:
-        book_msg = build_book_message()
-        if book_msg:
-            await send_telegram(book_msg)
-            send_bale(book_msg)
-            print("Book sent.")
+        try:
+            book_msg = build_book_message()
+            if book_msg:
+                await send_telegram(book_msg)
+                send_bale(book_msg)
+                print("Book sent.")
 
-        profile_msg = build_station_profile_message()
-        await send_telegram(profile_msg)
-        send_bale(profile_msg)
-        print("Station profile sent.")
+            profile_msg = build_station_profile_message()
+            await send_telegram(profile_msg)
+            send_bale(profile_msg)
+            print("Station profile sent.")
+        except Exception as e:
+            print("Book/Profile error:", e)
 
     print("Done.")
 
