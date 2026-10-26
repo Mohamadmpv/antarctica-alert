@@ -72,14 +72,13 @@ def get_gist_users(filename):
         return {}
 
 def check_already_sent(section):
-    """بررسی اینکه آیا این بخش در ۴ ساعت گذشته ارسال شده یا نه (برای جلوگیری از تکرار بین کامپیوتر و گیت‌هاب)"""
     sent_status = get_gist_users("last_sent_status.json")
     last_sent_str = sent_status.get(section)
     if last_sent_str:
         try:
             last_sent = datetime.fromisoformat(last_sent_str)
             now = datetime.now()
-            if (now - last_sent).total_seconds() < 4 * 3600: # کمتر از 4 ساعت
+            if (now - last_sent).total_seconds() < 4 * 3600:
                 return True
         except Exception:
             pass
